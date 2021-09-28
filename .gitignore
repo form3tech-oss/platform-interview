@@ -1,0 +1,4 @@
+# Ignore everything in this directory
+.idea
+.vagrant
+ubuntu-bionic-18.04-cloudimg-console.log
