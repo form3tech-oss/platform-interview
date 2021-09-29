@@ -1,4 +1,6 @@
 # Ignore everything in this directory
 .idea
 .vagrant
+.terrafor*
+terraform.tfstat*
 ubuntu-bionic-18.04-cloudimg-console.log
