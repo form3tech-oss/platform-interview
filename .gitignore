@@ -1,6 +1,9 @@
 # Ignore everything in this directory
 .idea
 .vagrant
-.terrafor*
+.terraform.loc*
 terraform.tfstat*
-ubuntu-bionic-18.04-cloudimg-console.log
+.terraform/
+*.log
+*.tar.gz
+output
