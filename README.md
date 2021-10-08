@@ -66,13 +66,13 @@ ca8c824503c4   vault:1.8.3                   "docker-entrypoint.s…"   16 minut
 ```
 
 ## Task
-Imagine the following scenario. The company using this application is scaling and increasing number services.
-It's been noticed that the current code in `tf/main.tf` is not very easy to maintain.
+Imagine the following scenario, your company is growing quickly 🚀 and increasing the number services being deployed and configured.
+It's been noticed that the code in `tf/main.tf` is not very easy to maintain 😢.
 
 The team would like to work on the following problems:
 
-- Refactor the terraform code to make it easy to add/update/remove services
-- Add a new environment `staging` that runs each microservice
+- Improve the terraform code to make it easier to add/update/remove services.
+- Add a new environment called `staging` that runs each microservice.
 
 ## Candidate instructions
 1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository
