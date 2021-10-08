@@ -1,11 +1,23 @@
 # Form3 Platform Interview
 
-## Sample application
+## 🧪 Sample application
 The sample application consists of three services:
 
-- payment
-- account
-- gateway
+```
+┌─────────────┐     ┌──────────────┐    ┌──────────────┐
+│             │     │              │    │              │
+│   payment   │     │   account    │    │   gateway    │
+│             │     │              │    │              │
+└─────────┬───┘     └──────┬───────┘    └──────┬───────┘
+          │                │                   │
+          │                │                   │
+          │                ▼                   │
+          │         ┌──────────────┐           │
+          │         │              │           │
+          └────────►│    vault     │◄──────────┘
+                    │              │
+                    └──────────────┘
+```                    
 
 Each service connects to [vault](https://www.vaultproject.io/) to retrieve database credentials.
 
@@ -28,7 +40,7 @@ The project structure is as follows:
 1. The `Vagrantfile` and `docker-compose.yml` is used to bootstrap this sample application and can be ignored.
 1. The `services` code is used to simulate a micro services architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.  
 
-## Running the sample application
+## 👟 Running the sample application
 - make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)
 - in a terminal execute `vagrant up`
 - once the vagrant image has started you should see a successful terraform apply:
@@ -64,7 +76,7 @@ ca8c824503c4   vault:1.8.3                   "docker-entrypoint.s…"   16 minut
 
 ```
 
-## Task
+## ⚙️ Task
 Imagine the following scenario, your company is growing quickly 🚀 and increasing the number services being deployed and configured.
 It's been noticed that the code in `tf/main.tf` is not very easy to maintain 😢.
 
@@ -73,7 +85,7 @@ The team would like to work on the following problems:
 - Improve the terraform code to make it easier to add/update/remove services.
 - Add a new environment called `staging` that runs each microservice.
 
-## Candidate instructions
+## 📝 Candidate instructions
 1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository
 2. Copying all files from this repository into your new private repository
 3. Complete the [Task](#task) :tada:
