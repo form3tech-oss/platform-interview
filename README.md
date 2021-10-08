@@ -75,5 +75,9 @@ The team would like to work on the following problems:
 - Add a new environment `staging` that runs each microservice
 
 ## Candidate instructions
-- Fork this repository privately
-- 
+1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository
+2. Copying all files from this repository into your new private repository
+3. Complete the [Task](#task) :tada:
+4. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) @form3tech-interviewer-1 to your private repo
+5. Let us know you've completed the exercise using the link provided at the bottom of the email from our recruitment team
+
