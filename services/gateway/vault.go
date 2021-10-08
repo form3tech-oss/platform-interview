@@ -32,7 +32,8 @@ func readSecret() error {
 
 	client.SetToken(token)
 
-	data, err := client.Logical().Read(fmt.Sprintf("secret/data/development/%s", SERVICE_NAME))
+	environment := os.Getenv("ENVIRONMENT")
+	data, err := client.Logical().Read(fmt.Sprintf("secret/data/%s/%s", environment, SERVICE_NAME))
 	if err != nil {
 		return fmt.Errorf("error reading secret: %v\n", err)
 	}

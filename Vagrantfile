@@ -7,12 +7,7 @@
 # you're doing.
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
-  config.vm.provision "docker" do |d|
-      d.run   "vault",
-        args: "--cap-add=IPC_LOCK -e 'VAULT_DEV_ROOT_TOKEN_ID=f23612cf-824d-4206-9e94-e31a6dc8ee8d' -p 8200:8200 --name=dev-vault"
-      d.run   "vault",
-        args: "--cap-add=IPC_LOCK -e 'VAULT_DEV_ROOT_TOKEN_ID=f23612cf-824d-4206-9e94-e31a6dc8ee8d' -p 8200:8300 --name=prod-vault"
-    end
+  config.vm.provision "docker"
 
   config.vm.provision :shell,
     keep_color: true,
@@ -32,11 +27,14 @@ sudo apt-get update && sudo apt-get install -y unzip jq
 pushd $HOME/bin
 wget -q https://releases.hashicorp.com/terraform/1.0.7/terraform_1.0.7_linux_amd64.zip
 unzip -q -o terraform_1.0.7_linux_amd64.zip
+. ~/.profile
 popd
-docker ps
-
+pushd /vagrant/tf
+docker-compose up -d
+popd
 echo Applying terraform script
 pushd /vagrant/tf
+terraform init
 terraform apply -auto-approve
 popd
 
