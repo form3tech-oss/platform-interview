@@ -7,7 +7,7 @@
 # you're doing.
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
-  config.vm.provision "docker"
+  config.vm.provision :docker
 
   config.vm.provision :shell,
     keep_color: true,
@@ -29,7 +29,7 @@ wget -q https://releases.hashicorp.com/terraform/1.0.7/terraform_1.0.7_linux_amd
 unzip -q -o terraform_1.0.7_linux_amd64.zip
 . ~/.profile
 popd
-pushd /vagrant/tf
+pushd /vagrant
 docker-compose up -d
 popd
 echo Applying terraform script
