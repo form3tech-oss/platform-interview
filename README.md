@@ -84,6 +84,8 @@ The team would like to work on the following problems:
 
 - Improve the terraform code to make it easier to add/update/remove services.
 - Add a new environment called `staging` that runs each microservice.
+- Add a README detailing your design decisions
+- Think about how your code would fit into a CI/CD pipeline
 
 ## 📝 Candidate instructions
 1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository
