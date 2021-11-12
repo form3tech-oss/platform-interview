@@ -83,6 +83,7 @@ It's been noticed that the code in `tf/main.tf` is not very easy to maintain ðŸ˜
 The team would like to work on the following problems:
 
 - Improve the terraform code to make it easier to add/update/remove services.
+- Do not worry about the values in the secret files, they can be anything
 - Add a new environment called `staging` that runs each microservice.
 - Add a README detailing your design decisions
 - Think about how your code would fit into a CI/CD pipeline
