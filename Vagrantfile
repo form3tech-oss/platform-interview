@@ -33,11 +33,11 @@ pushd /vagrant
 docker build ./services/account -t form3tech-oss/platformtest-account
 docker build ./services/gateway -t form3tech-oss/platformtest-gateway
 docker build ./services/payment -t form3tech-oss/platformtest-payment
-
+docker-compose up -d
 popd
 echo Applying terraform script
 pushd /vagrant/tf
-terraform init
+terraform init -upgrade
 terraform apply -auto-approve
 popd
 
