@@ -30,7 +30,10 @@ unzip -q -o terraform_1.0.7_linux_amd64.zip
 . ~/.profile
 popd
 pushd /vagrant
-docker-compose up -d
+docker build ./services/account -t form3tech-oss/platformtest-account
+docker build ./services/gateway -t form3tech-oss/platformtest-gateway
+docker build ./services/payment -t form3tech-oss/platformtest-payment
+
 popd
 echo Applying terraform script
 pushd /vagrant/tf

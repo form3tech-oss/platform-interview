@@ -1,5 +1,16 @@
 terraform {
   required_version  = ">= 0.1.0.7"
+
+  required_providers {
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "2.15.0"
+    }
+
+    vault = {
+      version = "3.0.1"
+    }
+  }
 }
 
 provider "vault" {
@@ -279,4 +290,13 @@ resource "vault_generic_endpoint" "payment_production" {
   "password": "123-payment-production"
 }
 EOT
+}
+
+resource "docker_container" "account_production" {
+  image = "form3tech-oss/platformtest-account"
+  name  = "account_production"
+
+  env = {
+    VAULT_ADDR = "http://vault-development:8200"
+  }
 }
