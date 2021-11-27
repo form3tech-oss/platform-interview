@@ -13,11 +13,9 @@ func main()  {
 	err := readSecret()
 	if err != nil {
 		fmt.Println(err)
-		exit(1)
+	} else {
+		fmt.Printf("%s service started....\n", SERVICE_NAME)
 	}
-
-	fmt.Printf("%s service started....\n", SERVICE_NAME)
-
 	sigs := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
 
