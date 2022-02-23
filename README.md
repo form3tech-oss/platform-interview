@@ -87,6 +87,7 @@ The team would like to work on the following problems:
 - Add a new environment called `staging` that runs each microservice.
 - Add a README detailing your design decisions
 - Think about how your code would fit into a CI/CD pipeline
+- 🚨 The new staging environment should be created when you run `vagrant up` 🚨
 
 ## 📝 Candidate instructions
 1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository
