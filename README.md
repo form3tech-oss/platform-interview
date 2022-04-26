@@ -88,7 +88,7 @@ The team would like to work on the following problems:
 - Improve the terraform code to make it easier to add/update/remove services.
 - Do not worry about the values in the secret files, they can be anything
 - Add a new environment called `staging` that runs each microservice.
-- Add a README detailing your design decisions
+- Add a README detailing your design decisions, if you are new to Terraform let us know
 - Think about how your code would fit into a CI/CD pipeline
 - 🚨 The new staging environment should be created when you run `vagrant up` 🚨
 
