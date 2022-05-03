@@ -1,5 +1,5 @@
 terraform {
-  required_version  = ">= 0.1.0.7"
+  required_version = ">= 0.1.0.7"
 
   required_providers {
     docker = {
@@ -32,7 +32,7 @@ provider "vault" {
 
 resource "vault_audit" "audit_dev" {
   provider = vault.vault_dev
-  type = "file"
+  type     = "file"
 
   options = {
     file_path = "/vault/logs/audit"
@@ -41,7 +41,7 @@ resource "vault_audit" "audit_dev" {
 
 resource "vault_audit" "audit_prod" {
   provider = vault.vault_prod
-  type = "file"
+  type     = "file"
 
   options = {
     file_path = "/vault/logs/audit"
@@ -50,18 +50,18 @@ resource "vault_audit" "audit_prod" {
 
 resource "vault_auth_backend" "userpass_dev" {
   provider = vault.vault_dev
-  type = "userpass"
+  type     = "userpass"
 }
 
 
 resource "vault_auth_backend" "userpass_prod" {
   provider = vault.vault_prod
-  type = "userpass"
+  type     = "userpass"
 }
 
 resource "vault_generic_secret" "account_development" {
   provider = vault.vault_dev
-  path = "secret/development/account"
+  path     = "secret/development/account"
 
   data_json = <<EOT
 {
@@ -73,7 +73,7 @@ EOT
 
 resource "vault_policy" "account_development" {
   provider = vault.vault_dev
-  name = "account-development"
+  name     = "account-development"
 
   policy = <<EOT
 
@@ -85,7 +85,7 @@ EOT
 }
 
 resource "vault_generic_endpoint" "account_development" {
-  provider = vault.vault_dev
+  provider             = vault.vault_dev
   depends_on           = [vault_auth_backend.userpass_dev]
   path                 = "auth/userpass/users/account-development"
   ignore_absent_fields = true
@@ -100,7 +100,7 @@ EOT
 
 resource "vault_generic_secret" "gateway_development" {
   provider = vault.vault_dev
-  path = "secret/development/gateway"
+  path     = "secret/development/gateway"
 
   data_json = <<EOT
 {
@@ -112,7 +112,7 @@ EOT
 
 resource "vault_policy" "gateway_development" {
   provider = vault.vault_dev
-  name = "gateway-development"
+  name     = "gateway-development"
 
   policy = <<EOT
 
@@ -124,7 +124,7 @@ EOT
 }
 
 resource "vault_generic_endpoint" "gateway_development" {
-  provider = vault.vault_dev
+  provider             = vault.vault_dev
   depends_on           = [vault_auth_backend.userpass_dev]
   path                 = "auth/userpass/users/gateway-development"
   ignore_absent_fields = true
@@ -138,7 +138,7 @@ EOT
 }
 resource "vault_generic_secret" "payment_development" {
   provider = vault.vault_dev
-  path = "secret/development/payment"
+  path     = "secret/development/payment"
 
   data_json = <<EOT
 {
@@ -150,7 +150,7 @@ EOT
 
 resource "vault_policy" "payment_development" {
   provider = vault.vault_dev
-  name = "payment-development"
+  name     = "payment-development"
 
   policy = <<EOT
 
@@ -162,7 +162,7 @@ EOT
 }
 
 resource "vault_generic_endpoint" "payment_development" {
-  provider = vault.vault_dev
+  provider             = vault.vault_dev
   depends_on           = [vault_auth_backend.userpass_dev]
   path                 = "auth/userpass/users/payment-development"
   ignore_absent_fields = true
@@ -177,7 +177,7 @@ EOT
 
 resource "vault_generic_secret" "account_production" {
   provider = vault.vault_prod
-  path = "secret/production/account"
+  path     = "secret/production/account"
 
   data_json = <<EOT
 {
@@ -189,7 +189,7 @@ EOT
 
 resource "vault_policy" "account_production" {
   provider = vault.vault_prod
-  name = "account-production"
+  name     = "account-production"
 
   policy = <<EOT
 
@@ -201,7 +201,7 @@ EOT
 }
 
 resource "vault_generic_endpoint" "account_production" {
-  provider = vault.vault_prod
+  provider             = vault.vault_prod
   depends_on           = [vault_auth_backend.userpass_prod]
   path                 = "auth/userpass/users/account-production"
   ignore_absent_fields = true
@@ -216,7 +216,7 @@ EOT
 
 resource "vault_generic_secret" "gateway_production" {
   provider = vault.vault_prod
-  path = "secret/production/gateway"
+  path     = "secret/production/gateway"
 
   data_json = <<EOT
 {
@@ -228,7 +228,7 @@ EOT
 
 resource "vault_policy" "gateway_production" {
   provider = vault.vault_prod
-  name = "gateway-production"
+  name     = "gateway-production"
 
   policy = <<EOT
 
@@ -240,7 +240,7 @@ EOT
 }
 
 resource "vault_generic_endpoint" "gateway_production" {
-  provider = vault.vault_prod
+  provider             = vault.vault_prod
   depends_on           = [vault_auth_backend.userpass_prod]
   path                 = "auth/userpass/users/gateway-production"
   ignore_absent_fields = true
@@ -255,7 +255,7 @@ EOT
 
 resource "vault_generic_secret" "payment_production" {
   provider = vault.vault_prod
-  path = "secret/production/payment"
+  path     = "secret/production/payment"
 
   data_json = <<EOT
 {
@@ -267,7 +267,7 @@ EOT
 
 resource "vault_policy" "payment_production" {
   provider = vault.vault_prod
-  name = "payment-production"
+  name     = "payment-production"
 
   policy = <<EOT
 
@@ -279,7 +279,7 @@ EOT
 }
 
 resource "vault_generic_endpoint" "payment_production" {
-  provider = vault.vault_prod
+  provider             = vault.vault_prod
   depends_on           = [vault_auth_backend.userpass_prod]
   path                 = "auth/userpass/users/payment-production"
   ignore_absent_fields = true
