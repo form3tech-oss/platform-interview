@@ -87,8 +87,9 @@ The team would like to work on the following problems:
 
 - Improve the terraform code to make it easier to add/update/remove services.
 - Add a new environment called `staging` that runs each microservice.
+- Structure your code in a way that will segregate environments
 - Add a README detailing your design decisions, if you are new to Terraform let us know
-- Think about how your code would fit into a CI/CD pipeline
+- Document in your README how your code would fit into a CI/CD pipeline
 - 🚨 The new staging environment should be created when you run `vagrant up` and the apps should print `service started` and print the secret data 🚨
 
 ## 📝 Candidate instructions
