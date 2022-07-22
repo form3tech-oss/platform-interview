@@ -7,3 +7,5 @@ terraform.tfstat*
 *.log
 *.tar.gz
 output
+tmp
+volume

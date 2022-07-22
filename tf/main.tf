@@ -1,3 +1,10 @@
+locals {
+  s3_endpoint = "http://localstack_main:4566"
+  aws_region = "us-east-1"
+  aws_access_key_id = "test"
+  aws_secret_access_key = "test"
+}
+
 terraform {
   required_version = ">= 0.1.0.7"
 
@@ -10,6 +17,14 @@ terraform {
     vault = {
       version = "3.0.1"
     }
+  }
+}
+
+provider "aws" {
+  region = local.aws_region
+
+  endpoints {
+    s3 = local.s3_endpoint
   }
 }
 
@@ -292,6 +307,10 @@ resource "vault_generic_endpoint" "payment_production" {
 EOT
 }
 
+resource "aws_s3_bucket" "account_bucket_production" {
+  bucket = "account-bucket-production"
+}
+
 resource "docker_container" "account_production" {
   image = "form3tech-oss/platformtest-account"
   name  = "account_production"
@@ -300,7 +319,12 @@ resource "docker_container" "account_production" {
     "VAULT_ADDR=http://vault-production:8200",
     "VAULT_USERNAME=account-production",
     "VAULT_PASSWORD=123-account-production",
-    "ENVIRONMENT=production"
+    "ENVIRONMENT=production",
+    "BUCKET_NAME=${aws_s3_bucket.account_bucket_production.bucket}",
+    "S3_ENDPOINT=${local.s3_endpoint}",
+    "AWS_REGION=${local.aws_region}",
+    "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
+    "AWS_SECRET_ACCESS_KEY=${local.aws_secret_access_key}"
   ]
 
   networks_advanced {
@@ -352,6 +376,10 @@ resource "docker_container" "payment_production" {
   }
 }
 
+resource "aws_s3_bucket" "account_bucket_development" {
+  bucket = "account-bucket-development"
+}
+
 resource "docker_container" "account_development" {
   image = "form3tech-oss/platformtest-account"
   name  = "account_development"
@@ -360,7 +388,12 @@ resource "docker_container" "account_development" {
     "VAULT_ADDR=http://vault-development:8200",
     "VAULT_USERNAME=account-development",
     "VAULT_PASSWORD=123-account-development",
-    "ENVIRONMENT=development"
+    "ENVIRONMENT=development",
+    "BUCKET_NAME=${aws_s3_bucket.account_bucket_development.bucket}",
+    "S3_ENDPOINT=${local.s3_endpoint}",
+    "AWS_REGION=${local.aws_region}",
+    "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
+    "AWS_SECRET_ACCESS_KEY=${local.aws_secret_access_key}"
   ]
 
   networks_advanced {
@@ -392,6 +425,10 @@ resource "docker_container" "gateway_development" {
   }
 }
 
+resource "aws_sqs_queue" "payment_queue_development" {
+  name = "payments"
+}
+
 resource "docker_container" "payment_development" {
   image = "form3tech-oss/platformtest-payment"
   name  = "payment_development"
@@ -400,7 +437,12 @@ resource "docker_container" "payment_development" {
     "VAULT_ADDR=http://vault-development:8200",
     "VAULT_USERNAME=payment-development",
     "VAULT_PASSWORD=123-payment-development",
-    "ENVIRONMENT=development"
+    "ENVIRONMENT=development",
+    "SQS_ENDPOINT=${local.s3_endpoint}",
+    "QUEUE_URL=${aws_sqs_queue.payment_queue_development.url}",
+    "AWS_REGION=${local.aws_region}",
+    "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
+    "AWS_SECRET_ACCESS_KEY=${local.aws_secret_access_key}"
   ]
 
   networks_advanced {
