@@ -1,24 +1,3 @@
-terraform {
-  required_version = ">= 0.1.0.7"
-
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "2.15.0"
-    }
-
-    vault = {
-      version = "3.0.1"
-    }
-  }
-}
-
-provider "vault" {
-  alias   = "vault_staging"
-  address = "http://localhost:8401"
-  token   = "6e64a48c-f759-40e2-806d-54778c3f1bd4"
-}
-
 resource "vault_generic_secret" "account_staging" {
   provider = vault.vault_staging
   path     = "secret/staging/account"

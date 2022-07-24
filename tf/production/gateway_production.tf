@@ -1,24 +1,3 @@
-terraform {
-  required_version = ">= 0.1.0.7"
-
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "2.15.0"
-    }
-
-    vault = {
-      version = "3.0.1"
-    }
-  }
-}
-
-provider "vault" {
-  alias   = "vault_prod"
-  address = "http://localhost:8301"
-  token   = "083672fc-4471-4ec4-9b59-a285e463a973"
-}
-
 resource "vault_generic_secret" "gateway_production" {
   provider = vault.vault_prod
   path     = "secret/production/gateway"
