@@ -35,20 +35,13 @@ docker build ./services/gateway -t form3tech-oss/platformtest-gateway
 docker build ./services/payment -t form3tech-oss/platformtest-payment
 docker-compose up -d
 popd
-echo Applying terraform Vault scripts
-for i in $(find /vagrant/tf/vault -type d -mindepth 1)
+echo Applying terraform scripts
+for i in $(find /vagrant/tf -type d -mindepth 1 -maxdepth 1)
 do
   pushd $i
   terraform init -upgrade
   terraform apply -auto-approve
   popd
-done
-echo Applying terraform services scripts
-for i in $(find /vagrant/tf/services -type d -mindepth 2 -maxdepth 2)
-  pushd $i 
-  terraform init -upgrade
-  terraform apply -auto-approve
-  popd 
 done
 set -x
 SCRIPT
