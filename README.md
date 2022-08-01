@@ -28,9 +28,10 @@ The project structure is as follows:
 
 ```
 .
-├── README.md
-├── Vagrantfile
 ├── docker-compose.yml
+├── Makefile
+├── README.md
+├── userdata.yml
 ├── services
 │   ├── account
 │   ├── gateway
@@ -39,14 +40,15 @@ The project structure is as follows:
 │   ├── main.tf
 
 ```
-1. The `tf\main.tf` is the sole focus of this test.
-1. The `Vagrantfile` and `docker-compose.yml` is used to bootstrap this sample application and can be ignored.
-1. The `services` code is used to simulate a micro services architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.  
+1. The `tf/main.tf` is the sole focus of this test.
+2. The `scripts/run.sh` and `docker-compose.yml` is used to bootstrap this sample application.
+3. The `services` code is used to simulate a micro-services architecture that connects to vault to retrieve database credentials.
+The code and method of connecting to vault can be ignored for the purposes of this test.  
 
 ## 👟 Running the sample application
-- make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)
-- in a terminal execute `vagrant up`
-- once the vagrant image has started you should see a successful terraform apply:
+- install [Multipass](https://multipass.run/install) for your operating system
+- in a terminal execute `make clean launch`
+- once the image has started you should see a successful terraform apply:
 ```
 default: vault_audit.audit_dev: Creation complete after 0s [id=file]
     default: vault_generic_endpoint.account_production: Creation complete after 0s [id=auth/userpass/users/account-production]
@@ -63,7 +65,7 @@ default: vault_audit.audit_dev: Creation complete after 0s [id=file]
 ```
 *Verify the services are running*
 
-- `vagrant ssh`
+- `make shell`
 - `docker ps` should show all containers running:
 
 ```
@@ -90,7 +92,7 @@ The team would like to work on the following problems:
 - Structure your code in a way that will segregate environments
 - Add a README detailing your design decisions, if you are new to Terraform let us know
 - Document in your README how your code would fit into a CI/CD pipeline
-- 🚨 The new staging environment should be created when you run `vagrant up` and the apps should print `service started` and print the secret data 🚨
+- 🚨 The new staging environment should be created when you run `make launch` and the apps should print `service started` and print the secret data 🚨
 
 ## 📝 Candidate instructions
 1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository

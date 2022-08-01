@@ -22,10 +22,6 @@ terraform {
 
 provider "aws" {
   region = local.aws_region
-
-  endpoints {
-    s3 = local.s3_endpoint
-  }
 }
 
 provider "vault" {
@@ -328,7 +324,7 @@ resource "docker_container" "account_production" {
   ]
 
   networks_advanced {
-    name = "vagrant_production"
+    name = "code_production"
   }
 
   lifecycle {
@@ -348,7 +344,7 @@ resource "docker_container" "gateway_production" {
   ]
 
   networks_advanced {
-    name = "vagrant_production"
+    name = "code_production"
   }
 
   lifecycle {
@@ -368,7 +364,7 @@ resource "docker_container" "payment_production" {
   ]
 
   networks_advanced {
-    name = "vagrant_production"
+    name = "code_production"
   }
 
   lifecycle {
@@ -397,7 +393,7 @@ resource "docker_container" "account_development" {
   ]
 
   networks_advanced {
-    name = "vagrant_development"
+    name = "code_development"
   }
 
   lifecycle {
@@ -417,7 +413,7 @@ resource "docker_container" "gateway_development" {
   ]
 
   networks_advanced {
-    name = "vagrant_development"
+    name = "code_development"
   }
 
   lifecycle {
@@ -446,7 +442,7 @@ resource "docker_container" "payment_development" {
   ]
 
   networks_advanced {
-    name = "vagrant_development"
+    name = "code_development"
   }
 
   lifecycle {
