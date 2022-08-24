@@ -89,6 +89,7 @@ The team would like to work on the following problems:
 - Structure your code in a way that will segregate environments
 - Add a README detailing your design decisions, if you are new to Terraform let us know
 - Document in your README how your code would fit into a CI/CD pipeline
+- Describe anything beyond the scope of this task that you would consider when running this code in a real production environment
 - 🚨 The new staging environment should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
 
 ## 📝 Candidate instructions
