@@ -39,8 +39,8 @@ The project structure is as follows:
     └── main.tf
 
 ```
-1. The `tf\main.tf` is the sole focus of this test.
-1. The `Vagrantfile` and `docker-compose.yml` are used to bootstrap this sample application and can be ignored.
+1. Refactoring the Terraform code found in the [tf](./tf) directory is the primary focus of this test.
+1. The `Vagrantfile` and `docker-compose.yml` are used to bootstrap this sample application; refactoring these files is not part of the test, but these files may be modified if your solution requires it.
 1. The `services` code is used to simulate a microservices architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.
 
 ## 👟 Running the sample application
@@ -89,11 +89,10 @@ The team would like to work on the following problems:
 - Structure your code in a way that will segregate environments
 - Add a README detailing your design decisions, if you are new to Terraform let us know
 - Document in your README how your code would fit into a CI/CD pipeline
-- 🚨 The new staging environment should be created when you run `vagrant up` and the apps should print `service started` and print the secret data 🚨
+- 🚨 The new staging environment should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
 
 ## 📝 Candidate instructions
-1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository
-2. Copying all files from this repository into your new private repository
-3. Complete the [Task](#task) :tada:
-4. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) [@form3tech-interviewer-1](https://github.com/form3tech-interviewer-1) to your private repo
-5. Let us know you've completed the exercise using the link provided at the bottom of the email from our recruitment team
+1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository containing the content of this repository
+2. Complete the [Task](#task) :tada:
+3. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) [@form3tech-interviewer-1](https://github.com/form3tech-interviewer-1) to your private repo
+4. Let us know you've completed the exercise using the link provided at the bottom of the email from our recruitment team
