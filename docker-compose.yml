@@ -14,7 +14,6 @@ services:
       - "8201:8200"
     environment:
       - VAULT_DEV_ROOT_TOKEN_ID=f23612cf-824d-4206-9e94-e31a6dc8ee8d
-    # production    
   vault-production:
     networks:
       - production

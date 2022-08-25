@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.1.0.7"
+  required_version = ">= 1.0.7"
 
   required_providers {
     docker = {

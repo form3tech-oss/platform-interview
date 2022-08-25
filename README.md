@@ -32,21 +32,21 @@ The project structure is as follows:
 ├── Vagrantfile
 ├── docker-compose.yml
 ├── services
-│   ├── account
-│   ├── gateway
-│   └── payment
-├── tf
-│   ├── main.tf
+│   ├── account
+│   ├── gateway
+│   └── payment
+└── tf
+    └── main.tf
 
 ```
-1. The `tf\main.tf` is the sole focus of this test.
-1. The `Vagrantfile` and `docker-compose.yml` is used to bootstrap this sample application and can be ignored.
-1. The `services` code is used to simulate a micro services architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.  
+1. Refactoring the Terraform code found in the [tf](./tf) directory is the primary focus of this test.
+1. The `Vagrantfile` and `docker-compose.yml` are used to bootstrap this sample application; refactoring these files is not part of the test, but these files may be modified if your solution requires it.
+1. The `services` code is used to simulate a microservices architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.
 
 ## 👟 Running the sample application
-- make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)
-- in a terminal execute `vagrant up`
-- once the vagrant image has started you should see a successful terraform apply:
+- Make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)
+- In a terminal execute `vagrant up`
+- Once the vagrant image has started you should see a successful terraform apply:
 ```
 default: vault_audit.audit_dev: Creation complete after 0s [id=file]
     default: vault_generic_endpoint.account_production: Creation complete after 0s [id=auth/userpass/users/account-production]
@@ -76,7 +76,6 @@ f5e64123c033   vagrant_account-development   "/go/bin/account"        16 minutes
 c42e3e7193bf   vagrant_gateway-development   "/go/bin/gateway"        16 minutes ago   Up 15 minutes                                               vagrant_gateway-development_1
 fb29bd20f3d0   vault:1.8.3                   "docker-entrypoint.s…"   16 minutes ago   Up 16 minutes   0.0.0.0:8201->8200/tcp, :::8201->8200/tcp   vagrant_vault-development_1
 ca8c824503c4   vault:1.8.3                   "docker-entrypoint.s…"   16 minutes ago   Up 16 minutes   0.0.0.0:8301->8200/tcp, :::8301->8200/tcp   vagrant_vault-production_1
-
 ```
 
 ## ⚙️ Task
@@ -85,17 +84,16 @@ It's been noticed that the code in `tf/main.tf` is not very easy to maintain �
 
 The team would like to work on the following problems:
 
-- Improve the terraform code to make it easier to add/update/remove services.
-- Add a new environment called `staging` that runs each microservice.
+- Improve the Terraform code to make it easier to add/update/remove services
+- Add a new environment called `staging` that runs each microservice
 - Structure your code in a way that will segregate environments
 - Add a README detailing your design decisions, if you are new to Terraform let us know
 - Document in your README how your code would fit into a CI/CD pipeline
-- 🚨 The new staging environment should be created when you run `vagrant up` and the apps should print `service started` and print the secret data 🚨
+- Describe anything beyond the scope of this task that you would consider when running this code in a real production environment
+- 🚨 The new staging environment should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
 
 ## 📝 Candidate instructions
-1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository
-2. Copying all files from this repository into your new private repository
-3. Complete the [Task](#task) :tada:
-4. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) [@form3tech-interviewer-1](https://github.com/form3tech-interviewer-1) to your private repo
-5. Let us know you've completed the exercise using the link provided at the bottom of the email from our recruitment team
-
+1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository containing the content of this repository
+2. Complete the [Task](#task) :tada:
+3. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) [@form3tech-interviewer-1](https://github.com/form3tech-interviewer-1) to your private repo
+4. Let us know you've completed the exercise using the link provided at the bottom of the email from our recruitment team
