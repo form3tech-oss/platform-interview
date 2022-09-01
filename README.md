@@ -43,9 +43,16 @@ The project structure is as follows:
 1. The `Vagrantfile` and `docker-compose.yml` are used to bootstrap this sample application; refactoring these files is not part of the test, but these files may be modified if your solution requires it.
 1. The `services` code is used to simulate a microservices architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.
 
+## Using an M1 Mac?
+If you are using an M1 Mac then you need to install some additional tools:
+- [Multipass](https://github.com/canonical/multipass/releases) install the latest release for your operating system
+- [Multipass provider for vagrant](https://github.com/Fred78290/vagrant-multipass)
+    - [Install the plugin](https://github.com/Fred78290/vagrant-multipass#plugin-installation)
+    - [Create the multipass vagrant box](https://github.com/Fred78290/vagrant-multipass#create-multipass-fake-box)
+
 ## 👟 Running the sample application
 - Make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)
-- In a terminal execute `vagrant up`
+- In a terminal execute `make` (note the make target detects your OS if you are running macm1 the Vagrantfile.macm1 is used else the Vagrantfile.x64 is used)
 - Once the vagrant image has started you should see a successful terraform apply:
 ```
 default: vault_audit.audit_dev: Creation complete after 0s [id=file]

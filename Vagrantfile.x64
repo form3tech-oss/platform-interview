@@ -8,6 +8,8 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
   config.vm.provision :docker
+  config.vm.define "platform-interview-sandbox"
+  config.vm.hostname = "platform-interview-sandbox"
 
   config.vm.provision :shell,
     keep_color: true,
@@ -18,15 +20,20 @@ end
 
 $install_tools = <<SCRIPT
 echo Installing docker-compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+os=$(uname -s | tr '[:upper:]' '[:lower:]')
+arch=$(uname -m)
+pro=$(dpkg --print-architecture)
+terraform_version="1.2.5"
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.1.1/docker-compose-${os}-${arch}" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 echo Installing terraform onto machine...
 mkdir -p $HOME/bin
 sudo apt-get update && sudo apt-get install -y unzip jq
 pushd $HOME/bin
-wget -q https://releases.hashicorp.com/terraform/1.0.7/terraform_1.0.7_linux_amd64.zip
-unzip -q -o terraform_1.0.7_linux_amd64.zip
+
+wget -q "https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_${pro}.zip"
+unzip -q -o "terraform_${terraform_version}_linux_${pro}.zip"
 . ~/.profile
 popd
 pushd /vagrant
@@ -39,6 +46,7 @@ echo Applying terraform script
 pushd /vagrant/tf
 terraform init -upgrade
 terraform apply -auto-approve
+terraform output
 popd
 
 set -x
