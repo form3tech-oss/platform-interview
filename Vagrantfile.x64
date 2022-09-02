@@ -8,8 +8,8 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
   config.vm.provision :docker
-  config.vm.define "platform-interview-sandbox"
-  config.vm.hostname = "platform-interview-sandbox"
+  config.vm.define "f3-interview"
+  config.vm.hostname = "f3-interview"
 
   config.vm.provision :shell,
     keep_color: true,

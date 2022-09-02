@@ -11,4 +11,4 @@ up: setup
 	vagrant up
 
 destroy:
-	vagrant destroy platform-interview-standbox
+	vagrant destroy f3-interview
