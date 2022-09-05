@@ -1,14 +1,11 @@
 .DEFAULT_GOAL := up
+VAGRANTFILE_EXTENSION := $(shell [ `uname -m` = "arm64" ] && echo "macm1" || echo "x64")
 
-setup:
-	@if [ `uname -m` = "arm64" ]; then\
-        cp Vagrantfile.macm1 Vagrantfile;\
-     else\
-     	cp Vagrantfile.x64 Vagrantfile; \
-    fi
-
-up: setup
-	vagrant up
+up:
+	VAGRANT_VAGRANTFILE=Vagrantfile.$(VAGRANTFILE_EXTENSION) vagrant up
 
 destroy:
-	vagrant destroy f3-interview
+	VAGRANT_VAGRANTFILE=Vagrantfile.$(VAGRANTFILE_EXTENSION) vagrant destroy f3-interview
+
+ssh:
+	VAGRANT_VAGRANTFILE=Vagrantfile.$(VAGRANTFILE_EXTENSION) vagrant ssh f3-interview

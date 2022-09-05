@@ -46,7 +46,6 @@ echo Applying terraform script
 pushd /vagrant/tf
 terraform init -upgrade
 terraform apply -auto-approve
-terraform output
 popd
 
 set -x
