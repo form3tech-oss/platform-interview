@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-echo "adding proxy certs"
-sudo mv /tmp/form3-palo-alto.crt /usr/local/share/ca-certificates/form3_ca.crt
-sudo update-ca-certificates
-
 echo Installing docker-compose
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
 arch=$(uname -m)

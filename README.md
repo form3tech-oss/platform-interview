@@ -52,7 +52,7 @@ If you are using an M1 Mac then you need to install some additional tools:
 
 ## 👟 Running the sample application
 - Make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)
-- In a terminal execute `make` (note the make target detects your OS if you are running macm1 the Vagrantfile.macm1 is used else the Vagrantfile.x64 is used)
+- To run the project run `vagrant up`
 - Once the vagrant image has started you should see a successful terraform apply:
 ```
 default: vault_audit.audit_dev: Creation complete after 0s [id=file]

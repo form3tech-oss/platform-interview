@@ -1,7 +1,6 @@
 # Ignore everything in this directory
 .idea
 .vagrant
-Vagrantfile
 .terraform.loc*
 terraform.tfstat*
 .terraform/
