@@ -26,29 +26,24 @@ Vagrant.configure("2") do |config|
     multipass.image_name = "bionic"
   end
 
-  config.vm.provision "file", source: "./form3-palo-alto.crt", destination: "/tmp/form3-palo-alto.crt"
-
+  config.vm.provision "file", source: "./form3.crt", destination: "/tmp/form3.crt"
   config.vm.provision :shell,
                       keep_color: true,
                       privileged: false,
                       run: "always",
                       inline: <<-SCRIPT
-    sudo mv /tmp/form3-palo-alto.crt /usr/local/share/ca-certificates/form3_ca.crt
+    sudo mv /tmp/form3.crt /usr/local/share/ca-certificates/form3_ca.crt
     sudo update-ca-certificates
   SCRIPT
 
   config.vm.provision :docker
   config.vm.define "f3-interview"
   config.vm.hostname = "f3-interview"
-
   config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
-
-
 
   config.vm.provision :shell,
     keep_color: true,
     privileged: false,
     run: "always",
     path: "./run.sh"
-  
 end

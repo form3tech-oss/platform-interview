@@ -7,4 +7,3 @@ terraform.tfstat*
 *.log
 *.tar.gz
 output
-*.crt
