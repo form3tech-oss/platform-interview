@@ -28,20 +28,29 @@ The project structure is as follows:
 
 ```
 .
-├── README.md
-├── Vagrantfile
 ├── docker-compose.yml
+├── form3.crt
+├── README.md
+├── run.sh
+├── Vagrantfile
 ├── services
 │   ├── account
 │   ├── gateway
 │   └── payment
 └── tf
     └── main.tf
-
 ```
 1. Refactoring the Terraform code found in the [tf](./tf) directory is the primary focus of this test.
-1. The `Vagrantfile` and `docker-compose.yml` are used to bootstrap this sample application; refactoring these files is not part of the test, but these files may be modified if your solution requires it.
+1. `Vagrantfile`, `run.sh` and `docker-compose.yml` are used to bootstrap this sample application; refactoring these files is not part of the test, but these files may be modified if your solution requires it.
+1. `form3.crt` is used to ease sandboxed running of the submission by Form3 staff and can be ignored.
 1. The `services` code is used to simulate a microservices architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.
+
+## Using an M1 Mac?
+If you are using an M1 Mac then you need to install some additional tools:
+- [Multipass](https://github.com/canonical/multipass/releases) install the latest release for your operating system
+- [Multipass provider for vagrant](https://github.com/Fred78290/vagrant-multipass)
+    - [Install the plugin](https://github.com/Fred78290/vagrant-multipass#plugin-installation)
+    - [Create the multipass vagrant box](https://github.com/Fred78290/vagrant-multipass#create-multipass-fake-box)
 
 ## 👟 Running the sample application
 - Make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)

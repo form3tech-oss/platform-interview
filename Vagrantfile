@@ -6,40 +6,44 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/bionic64"
+
+  # Tells us if the host system is an Apple Silicon Mac running Rosetta
+  def running_rosetta()
+    !`sysctl -in sysctl.proc_translated`.strip().to_i.zero?
+  end
+
+  arch = `arch`.strip()
+  if arch == 'arm64' || (arch == 'i386' && running_rosetta()) # is M1
+    config.vm.box = "multipass"
+  else # not M1
+    config.vm.box = "ubuntu/bionic64"
+  end
+
+  config.vm.provider "multipass" do |multipass, override|
+    multipass.hd_size = "10G"
+    multipass.cpu_count = 1
+    multipass.memory_mb = 2048
+    multipass.image_name = "bionic"
+  end
+
+  config.vm.provision "file", source: "./form3.crt", destination: "/tmp/form3.crt"
+  config.vm.provision :shell,
+                      keep_color: true,
+                      privileged: false,
+                      run: "always",
+                      inline: <<-SCRIPT
+    sudo mv /tmp/form3.crt /usr/local/share/ca-certificates/form3_ca.crt
+    sudo update-ca-certificates
+  SCRIPT
+
   config.vm.provision :docker
+  config.vm.define "f3-interview"
+  config.vm.hostname = "f3-interview"
+  config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
 
   config.vm.provision :shell,
     keep_color: true,
     privileged: false,
     run: "always",
-    inline: $install_tools
+    path: "./run.sh"
 end
-
-$install_tools = <<SCRIPT
-echo Installing docker-compose
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-
-echo Installing terraform onto machine...
-mkdir -p $HOME/bin
-sudo apt-get update && sudo apt-get install -y unzip jq
-pushd $HOME/bin
-wget -q https://releases.hashicorp.com/terraform/1.0.7/terraform_1.0.7_linux_amd64.zip
-unzip -q -o terraform_1.0.7_linux_amd64.zip
-. ~/.profile
-popd
-pushd /vagrant
-docker build ./services/account -t form3tech-oss/platformtest-account
-docker build ./services/gateway -t form3tech-oss/platformtest-gateway
-docker build ./services/payment -t form3tech-oss/platformtest-payment
-docker-compose up -d
-popd
-echo Applying terraform script
-pushd /vagrant/tf
-terraform init -upgrade
-terraform apply -auto-approve
-popd
-
-set -x
-SCRIPT
