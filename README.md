@@ -46,9 +46,14 @@ The project structure is as follows:
 The code and method of connecting to vault can be ignored for the purposes of this test.  
 
 ## 👟 Running the sample application
-- install [Multipass](https://multipass.run/install) for your operating system
-- in a terminal execute `make clean launch`
-- once the image has started you should see a successful terraform apply:
+  - **Mac / Linux** users:
+    - Install [Multipass](https://multipass.run/install) select `Oracle Virtualbox` during the installation
+  - **Windows** users:
+    - Install [Virtualbox](https://www.virtualbox.org/wiki/Downloads)
+    - Install [Multipass](https://multipass.run/install) select `Oracle Virtualbox` during the installation
+    - Require [make](https://community.chocolatey.org/packages/make)
+  - in a terminal execute `make clean launch`
+  - once the image has started you should see a successful terraform apply:
 ```
 default: vault_audit.audit_dev: Creation complete after 0s [id=file]
     default: vault_generic_endpoint.account_production: Creation complete after 0s [id=auth/userpass/users/account-production]
