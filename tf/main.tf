@@ -352,6 +352,24 @@ resource "docker_container" "payment_production" {
   }
 }
 
+resource "docker_container" "frontend_production" {
+  image = "docker.io/nginx:1.22.0-alpine"
+  name  = "frontend_production"
+
+  ports {
+    internal = 80
+    external = 4081
+  }
+
+  networks_advanced {
+    name = "vagrant_production"
+  }
+
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
 resource "docker_container" "account_development" {
   image = "form3tech-oss/platformtest-account"
   name  = "account_development"
@@ -402,6 +420,24 @@ resource "docker_container" "payment_development" {
     "VAULT_PASSWORD=123-payment-development",
     "ENVIRONMENT=development"
   ]
+
+  networks_advanced {
+    name = "vagrant_development"
+  }
+
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+resource "docker_container" "frontend_development" {
+  image = "docker.io/nginx:latest"
+  name  = "frontend_development"
+
+  ports {
+    internal = 80
+    external = 4080
+  }
 
   networks_advanced {
     name = "vagrant_development"
