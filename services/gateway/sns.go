@@ -24,12 +24,13 @@ func sendPayments() error {
 	address := fmt.Sprintf("%s:%s", snsEndpoint.Hostname(), snsEndpoint.Port())
 
 	operation := func() error {
-
-		c, err := net.Dial("tcp", address)
+		fmt.Printf("dialing %s\n", address)
+		c, err := net.DialTimeout("tcp", address, 2*time.Second)
 		if err != nil {
 			fmt.Printf("error dialing %s %v\n", address, err)
 			return err
 		}
+		fmt.Printf("dialed %s\n", address)
 
 		return c.Close()
 	}
@@ -68,7 +69,7 @@ func sendPayments() error {
 			return fmt.Errorf("publish payment on %s: %w", snsTopicArn, err)
 		}
 
-		fmt.Printf("published message %s", *res.MessageId)
+		fmt.Printf("published message %s\n", *res.MessageId)
 
 		paymentNumber = paymentNumber + 1
 	}

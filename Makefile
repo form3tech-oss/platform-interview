@@ -13,6 +13,3 @@ shell:
 .PHONY: clean
 clean:
 	multipass delete -p $(instance) 2>/dev/null; true
-
-.PHONY: remote-copy
-	scp
