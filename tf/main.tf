@@ -342,9 +342,7 @@ resource "docker_container" "account_production" {
     name = "form3_test_production"
   }
 
-  lifecycle {
-    ignore_changes = all
-  }
+
 }
 
 resource "docker_container" "gateway_production" {
@@ -355,16 +353,33 @@ resource "docker_container" "gateway_production" {
     "VAULT_ADDR=http://vault-production:8200",
     "VAULT_USERNAME=gateway-production",
     "VAULT_PASSWORD=123-gateway-production",
-    "ENVIRONMENT=production"
+    "ENVIRONMENT=production",
+    "SNS_ENDPOINT=${local.localstack_internal_endpoint}",
+    "SNS_TOPIC_ARN=${aws_sns_topic.payment_updates_production.arn}",
+    "AWS_REGION=${local.aws_region}",
+    "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
+    "AWS_SECRET_ACCESS_KEY=${local.aws_secret_access_key}",
   ]
 
   networks_advanced {
     name = "form3_test_production"
   }
 
-  lifecycle {
-    ignore_changes = all
-  }
+
+}
+
+resource "aws_sns_topic" "payment_updates_production" {
+  name = "payment-updates-production"
+}
+
+resource "aws_sns_topic_subscription" "payment_updates_sqs_target_production" {
+  topic_arn = aws_sns_topic.payment_updates_production.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.payment_queue_production.arn
+}
+
+resource "aws_sqs_queue" "payment_queue_production" {
+  name = "payments-production"
 }
 
 resource "docker_container" "payment_production" {
@@ -375,16 +390,19 @@ resource "docker_container" "payment_production" {
     "VAULT_ADDR=http://vault-production:8200",
     "VAULT_USERNAME=payment-production",
     "VAULT_PASSWORD=123-payment-production",
-    "ENVIRONMENT=production"
+    "ENVIRONMENT=production",
+    "SQS_ENDPOINT=${local.localstack_internal_endpoint}",
+    "QUEUE_URL=${aws_sqs_queue.payment_queue_production.url}",
+    "AWS_REGION=${local.aws_region}",
+    "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
+    "AWS_SECRET_ACCESS_KEY=${local.aws_secret_access_key}"
   ]
 
   networks_advanced {
     name = "form3_test_production"
   }
 
-  lifecycle {
-    ignore_changes = all
-  }
+
 }
 
 resource "aws_s3_bucket" "account_bucket_development" {
@@ -420,20 +438,16 @@ resource "docker_container" "gateway_development" {
     "VAULT_ADDR=http://vault-development:8200",
     "VAULT_USERNAME=gateway-development",
     "VAULT_PASSWORD=123-gateway-development",
+    "ENVIRONMENT=development",
     "SNS_ENDPOINT=${local.localstack_internal_endpoint}",
     "SNS_TOPIC_ARN=${aws_sns_topic.payment_updates_development.arn}",
     "AWS_REGION=${local.aws_region}",
     "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
     "AWS_SECRET_ACCESS_KEY=${local.aws_secret_access_key}",
-    "ENVIRONMENT=development"
   ]
 
   networks_advanced {
     name = "form3_test_development"
-  }
-
-  lifecycle {
-    ignore_changes = all
   }
 }
 
@@ -441,14 +455,14 @@ resource "aws_sns_topic" "payment_updates_development" {
   name = "payment-updates-development"
 }
 
-resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
+resource "aws_sns_topic_subscription" "payment_updates_sqs_target_development" {
   topic_arn = aws_sns_topic.payment_updates_development.arn
   protocol  = "sqs"
   endpoint  = aws_sqs_queue.payment_queue_development.arn
 }
 
 resource "aws_sqs_queue" "payment_queue_development" {
-  name = "payments"
+  name = "payments-development"
 }
 
 resource "docker_container" "payment_development" {
@@ -469,9 +483,5 @@ resource "docker_container" "payment_development" {
 
   networks_advanced {
     name = "form3_test_development"
-  }
-
-  lifecycle {
-    ignore_changes = all
   }
 }
