@@ -11,34 +11,23 @@ const SERVICE_NAME = "payment"
 
 func main() {
 	fmt.Printf("%s service initializing....\n", SERVICE_NAME)
-	err := readSecret()
-	if err != nil {
-		fmt.Println(err)
-		exit(1)
+	if err := readSecret(); err != nil {
+		fmt.Printf("error reading vault secret: %v\n", err)
+	} else {
+		fmt.Printf("%s service started....\n", SERVICE_NAME)
 	}
 
-	fmt.Printf("%s service started....\n", SERVICE_NAME)
+	go func() {
+		if err := readPayments(); err != nil {
+			fmt.Printf("error logging startup %v\n", err)
+			exit(1)
+		}
+	}()
 
 	sigs := make(chan os.Signal, 1)
-	done := make(chan bool, 1)
-
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
-	go func() {
-		err := readPayments()
-		if err != nil {
-			fmt.Printf("error reading payments. %v", err)
-		}
-
-		os.Exit(-1)
-	}()
-
-	go func() {
-		_ = <-sigs
-		done <- true
-	}()
-
-	<-done
+	<-sigs
 	exit(0)
 }
 

@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/cenkalti/backoff/v3"
+	"math/rand"
 	"time"
 
 	"net"
@@ -40,8 +41,6 @@ func sendPayments() error {
 		return err
 	}
 
-	fmt.Printf("about to create session")
-
 	// Initialize a session
 	sess, err := session.NewSession(&aws.Config{
 		Region:           aws.String(awsRegion),
@@ -54,24 +53,17 @@ func sendPayments() error {
 		return fmt.Errorf("could not create session. %w", err)
 	}
 
-	fmt.Printf("session created")
-
 	client := sns.New(sess)
 
-	paymentNumber := 0
-	for range time.NewTicker(time.Second * 1).C {
-		fmt.Printf("before publish")
-		res, err := client.Publish(&sns.PublishInput{
+	for range time.NewTicker(time.Second * 5).C {
+		_, err := client.Publish(&sns.PublishInput{
 			TopicArn: aws.String(snsTopicArn),
-			Message:  aws.String(fmt.Sprintf("payment %d", paymentNumber)),
+			Message:  aws.String(fmt.Sprintf("payment %d", rand.Int())),
 		})
 		if err != nil {
 			return fmt.Errorf("publish payment on %s: %w", snsTopicArn, err)
 		}
-
-		fmt.Printf("published message %s\n", *res.MessageId)
-
-		paymentNumber = paymentNumber + 1
+		fmt.Println("message sent")
 	}
 
 	return nil

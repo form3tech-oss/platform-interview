@@ -29,8 +29,7 @@ func logStartup() error {
 
 	address := fmt.Sprintf("%s:%s", s3endpoint.Hostname(), s3endpoint.Port())
 	operation := func() error {
-
-		c, err := net.Dial("tcp", address)
+		c, err := net.DialTimeout("tcp", address, 2*time.Second)
 		if err != nil {
 			fmt.Printf("error dialing %s %v\n", address, err)
 			return err
@@ -53,7 +52,8 @@ func logStartup() error {
 	})
 
 	svc := s3.New(sess)
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
 
 	putResponse, err := svc.PutObjectWithContext(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
@@ -65,7 +65,7 @@ func logStartup() error {
 		return fmt.Errorf("failed to logStartup file to s3, %v %v", err, putResponse)
 	}
 
-	fmt.Printf("written file version: %v in %s", putResponse, environment)
+	fmt.Printf("written file version: %v in %s\n", putResponse, environment)
 
 	return nil
 }

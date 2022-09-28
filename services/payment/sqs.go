@@ -62,7 +62,7 @@ func readPayments() error {
 		}
 
 		if len(res.Messages) > 0 {
-			fmt.Printf("message: %s\n", res.Messages[0].String())
+			fmt.Printf("%d messages received\n", len(res.Messages))
 
 			_, err = client.DeleteMessage(&sqs.DeleteMessageInput{
 				QueueUrl:      aws.String(queueURL),
