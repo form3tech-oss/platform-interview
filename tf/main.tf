@@ -1,7 +1,8 @@
 locals {
-  s3_endpoint = "http://localstack_main:4566"
-  aws_region = "us-east-1"
-  aws_access_key_id = "test"
+  localstack_external_endpoint           = "http://localhost:4566"
+  localstack_internal_endpoint           = "http://localstack_main:4566"
+  aws_region            = "us-east-1"
+  aws_access_key_id     = "test"
   aws_secret_access_key = "test"
 }
 
@@ -22,6 +23,20 @@ terraform {
 
 provider "aws" {
   region = local.aws_region
+
+  access_key = local.aws_access_key_id
+  secret_key = local.aws_secret_access_key
+
+  s3_force_path_style         = true
+  skip_credentials_validation = true
+  skip_metadata_api_check     = true
+  skip_requesting_account_id  = true
+
+  endpoints {
+    s3  = "http://s3.localhost.localstack.cloud:4566"
+    sns = local.localstack_external_endpoint
+    sqs = local.localstack_external_endpoint
+  }
 }
 
 provider "vault" {
@@ -317,7 +332,7 @@ resource "docker_container" "account_production" {
     "VAULT_PASSWORD=123-account-production",
     "ENVIRONMENT=production",
     "BUCKET_NAME=${aws_s3_bucket.account_bucket_production.bucket}",
-    "S3_ENDPOINT=${local.s3_endpoint}",
+    "S3_ENDPOINT=${local.localstack_internal_endpoint}",
     "AWS_REGION=${local.aws_region}",
     "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
     "AWS_SECRET_ACCESS_KEY=${local.aws_secret_access_key}"
@@ -386,7 +401,7 @@ resource "docker_container" "account_development" {
     "VAULT_PASSWORD=123-account-development",
     "ENVIRONMENT=development",
     "BUCKET_NAME=${aws_s3_bucket.account_bucket_development.bucket}",
-    "S3_ENDPOINT=${local.s3_endpoint}",
+    "S3_ENDPOINT=${local.localstack_internal_endpoint}",
     "AWS_REGION=${local.aws_region}",
     "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
     "AWS_SECRET_ACCESS_KEY=${local.aws_secret_access_key}"
@@ -394,10 +409,6 @@ resource "docker_container" "account_development" {
 
   networks_advanced {
     name = "form3_test_development"
-  }
-
-  lifecycle {
-    ignore_changes = all
   }
 }
 
@@ -409,7 +420,7 @@ resource "docker_container" "gateway_development" {
     "VAULT_ADDR=http://vault-development:8200",
     "VAULT_USERNAME=gateway-development",
     "VAULT_PASSWORD=123-gateway-development",
-    "SNS_ENDPOINT=${local.s3_endpoint}",
+    "SNS_ENDPOINT=${local.localstack_internal_endpoint}",
     "SNS_TOPIC_ARN=${aws_sns_topic.payment_updates_development.arn}",
     "AWS_REGION=${local.aws_region}",
     "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",
@@ -449,7 +460,7 @@ resource "docker_container" "payment_development" {
     "VAULT_USERNAME=payment-development",
     "VAULT_PASSWORD=123-payment-development",
     "ENVIRONMENT=development",
-    "SQS_ENDPOINT=${local.s3_endpoint}",
+    "SQS_ENDPOINT=${local.localstack_internal_endpoint}",
     "QUEUE_URL=${aws_sqs_queue.payment_queue_development.url}",
     "AWS_REGION=${local.aws_region}",
     "AWS_ACCESS_KEY_ID=${local.aws_access_key_id}",

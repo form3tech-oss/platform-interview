@@ -5,6 +5,6 @@ docker build services/payment -t form3tech-oss/platformtest-payment
 docker-compose -p form3_test up -d
 echo Applying terraform script
 pushd ./tf
-tflocal init -upgrade
-tflocal apply -auto-approve
+terraform init -upgrade
+terraform apply -auto-approve
 popd
