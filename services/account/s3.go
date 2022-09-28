@@ -45,7 +45,7 @@ func logStartup() error {
 	}
 
 	// Initialize a session
-	sess, _ := session.NewSession(&aws.Config{
+	sess, err := session.NewSession(&aws.Config{
 		Region:           aws.String(awsRegion),
 		Credentials:      credentials.NewStaticCredentials(awsAccessKeyId, awsAccessSecretAccessKey, ""),
 		S3ForcePathStyle: aws.Bool(true),

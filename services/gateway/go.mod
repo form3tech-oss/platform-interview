@@ -2,10 +2,13 @@ module github.com/form3tech-oss/platform-interview/services/accounts
 
 go 1.17
 
-require github.com/hashicorp/vault/api v1.1.1
+require (
+	github.com/aws/aws-sdk-go v1.30.27
+	github.com/cenkalti/backoff/v3 v3.0.0
+	github.com/hashicorp/vault/api v1.1.1
+)
 
 require (
-	github.com/cenkalti/backoff/v3 v3.0.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.1 // indirect
@@ -15,6 +18,7 @@ require (
 	github.com/hashicorp/go-sockaddr v1.0.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/vault/sdk v0.2.1 // indirect
+	github.com/jmespath/go-jmespath v0.3.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.3.2 // indirect
 	github.com/pierrec/lz4 v2.5.2+incompatible // indirect

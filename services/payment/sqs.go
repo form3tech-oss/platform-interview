@@ -37,7 +37,7 @@ func readPayments() error {
 	}
 
 	// Initialize a session
-	sess, _ := session.NewSession(&aws.Config{
+	sess, err := session.NewSession(&aws.Config{
 		Region:           aws.String(awsRegion),
 		Credentials:      credentials.NewStaticCredentials(awsAccessKeyId, awsAccessSecretAccessKey, ""),
 		S3ForcePathStyle: aws.Bool(true),
@@ -45,7 +45,7 @@ func readPayments() error {
 	})
 
 	if err != nil {
-		return fmt.Errorf("could not parse uri. %w", err)
+		return fmt.Errorf("could not create session. %w", err)
 	}
 
 	client := sqs.New(sess)

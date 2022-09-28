@@ -8,7 +8,8 @@ import (
 )
 
 const SERVICE_NAME = "gateway"
-func main()  {
+
+func main() {
 	fmt.Printf("%s service initializing....\n", SERVICE_NAME)
 	err := readSecret()
 	if err != nil {
@@ -24,6 +25,15 @@ func main()  {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
+		err := sendPayments()
+		if err != nil {
+			fmt.Printf("error sending payments. %v", err)
+		}
+
+		os.Exit(-1)
+	}()
+
+	go func() {
 		_ = <-sigs
 		done <- true
 	}()
@@ -32,7 +42,7 @@ func main()  {
 	exit(0)
 }
 
-func exit(status int)  {
+func exit(status int) {
 	if status == 0 {
 		fmt.Printf("%s service exit....\n", SERVICE_NAME)
 	} else {
