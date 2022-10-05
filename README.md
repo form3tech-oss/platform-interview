@@ -6,21 +6,14 @@ Platform engineers at Form3 build highly available distributed systems using inf
 ## 🧪 Sample application
 The sample application consists of three services:
 
-```
-┌─────────────┐     ┌──────────────┐    ┌──────────────┐
-│             │     │              │    │              │
-│   payment   │     │   account    │    │   gateway    │
-│             │     │              │    │              │
-└─────────┬───┘     └──────┬───────┘    └──────┬───────┘
-          │                │                   │
-          │                │                   │
-          │                ▼                   │
-          │         ┌──────────────┐           │
-          │         │              │           │
-          └────────►│    vault     │◄──────────┘
-                    │              │
-                    └──────────────┘
-```                    
+```mermaid
+graph TD;
+
+payment-->vault;
+account-->vault;
+gateway-->vault;
+
+```                 
 
 Each service connects to [vault](https://www.vaultproject.io/) to retrieve database credentials.
 
