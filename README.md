@@ -101,7 +101,7 @@ The team would like to work on the following problems:
 - Add a README detailing your design decisions, if you are new to Terraform let us know
 - Document in your README how your code would fit into a CI/CD pipeline
 - Describe anything beyond the scope of this task that you would consider when running this code in a real production environment
-- 🚨 The new staging environment should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
+- 🚨 All environments (including staging) should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
 
 ## 📝 Candidate instructions
 1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository containing the content of this repository
