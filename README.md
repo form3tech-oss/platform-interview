@@ -101,6 +101,8 @@ The team would like to work on the following problems:
 - Add a README detailing your design decisions, if you are new to Terraform let us know
 - Document in your README how your code would fit into a CI/CD pipeline
 - Describe anything beyond the scope of this task that you would consider when running this code in a real production environment
+- Please only use plain Terraform in your solution and not tools such as Terragrunt
+- Versions of the software in `development` and `production` should not change 
 - 🚨 All environments (including staging) should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
 
 ## 📝 Candidate instructions
