@@ -93,20 +93,32 @@ a7c0b089b10c   vault:1.8.3                          "docker-entrypoint.s…"   2
 Imagine the following scenario, your company is growing quickly 🚀 and increasing the number services being deployed and configured.
 It's been noticed that the code in `tf/main.tf` is not very easy to maintain 😢.
 
-The team would like to work on the following problems:
+We would like you to complete the following tasks:
 
-- Improve the Terraform code to make it easier to add/update/remove services
-- Add a new environment called `staging` that runs each microservice
-- Structure your code in a way that will segregate environments
-- Add a README detailing your design decisions, if you are new to Terraform let us know
-- Document in your README how your code would fit into a CI/CD pipeline
-- Describe anything beyond the scope of this task that you would consider when running this code in a real production environment
-- Please only use plain Terraform in your solution and not tools such as Terragrunt
-- Versions of the software in `development` and `production` should not change 
-- 🚨 All environments (including staging) should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
+- [ ] Improve the Terraform code to make it easier to add/update/remove services
+- [ ] Add a new environment called `staging` that runs each microservice
+- [ ] Add a README detailing: 
+  - [ ] Your design decisions, if you are new to Terraform let us know
+  - [ ] How your code would fit into a CI/CD pipeline
+  - [ ] Anything beyond the scope of this task that you would consider when running this code in a real production environment
+
 
 ## 📝 Candidate instructions
 1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository containing the content of this repository
 2. Complete the [Task](#task) :tada:
 3. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) [@form3tech-interviewer-1](https://github.com/form3tech-interviewer-1) to your private repo
 4. Let us know you've completed the exercise using the link provided at the bottom of the email from our recruitment team
+
+
+## Submission Guidance
+
+### Shoulds
+- Only use plain Terraform in your solution
+- Only modify files in the `tf/` directory and `run.sh`
+- Keep the current versions of the services running in `development` and `production` environments
+- Structure your code in a way that will segregate environments
+- 🚨 All environments (including staging) should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
+- Structure your code in a way that allows engineers to run different versions of services in different environments
+
+### Should Nots
+- Use tools that extend Terraform such as Terragrunt
