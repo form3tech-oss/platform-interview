@@ -114,7 +114,7 @@ We would like you to complete the following tasks:
 
 ### Shoulds
 - Only use plain Terraform in your solution
-- Only modify files in the `tf/` directory and `run.sh`
+- Only modify files in the `tf/` directory, `run.sh`, and `docker-compose.yml`
 - Keep the current versions of the services running in `development` and `production` environments
 - Structure your code in a way that will segregate environments
 - 🚨 All environments (including staging) should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
