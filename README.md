@@ -2,11 +2,11 @@
 
 Platform engineers at Form3 build highly available distributed systems using infrastructure as code. Our take home test is designed to evaluate real world activities that are involved with this role. We recognise that this may not be as mentally challenging and may take longer to implement than some algorithmic tests that are often seen in interview exercises. Our approach however helps ensure that you will be working with a team of engineers with the necessary practical skills for the role (as well as a diverse range of technical wizardry).
 
-
 ## 🧪 Sample application
+
 The sample application consists of four services:
 
-```
+```console
 ┌─────────────┐     ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
 │             │     │              │    │              │    │              │
 │   payment   │     │   account    │    │   gateway    │    │   frontend   │
@@ -20,13 +20,13 @@ The sample application consists of four services:
           └────────►│    vault     │◄──────────┘
                     │              │
                     └──────────────┘
-```                    
+```
 
 Three of those services connect to [vault](https://www.vaultproject.io/) to retrieve database credentials. The frontend container serves a static file.
 
 The project structure is as follows:
 
-```
+```console
 .
 ├── docker-compose.yml
 ├── form3.crt
@@ -40,23 +40,28 @@ The project structure is as follows:
 └── tf
     └── main.tf
 ```
+
 1. Refactoring the Terraform code found in the [tf](./tf) directory is the primary focus of this test.
 1. `Vagrantfile`, `run.sh` and `docker-compose.yml` are used to bootstrap this sample application; refactoring these files is not part of the test, but these files may be modified if your solution requires it.
 1. `form3.crt` is used to ease sandboxed running of the submission by Form3 staff and can be ignored.
 1. The `services` code is used to simulate a microservices architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.
 
 ## Using an M1 Mac?
+
 If you are using an M1 Mac then you need to install some additional tools:
+
 - [Multipass](https://github.com/canonical/multipass/releases) install the latest release for your operating system
 - [Multipass provider for vagrant](https://github.com/Fred78290/vagrant-multipass)
-    - [Install the plugin](https://github.com/Fred78290/vagrant-multipass#plugin-installation)
-    - [Create the multipass vagrant box](https://github.com/Fred78290/vagrant-multipass#create-multipass-fake-box)
+  - [Install the plugin](https://github.com/Fred78290/vagrant-multipass#plugin-installation)
+  - [Create the multipass vagrant box](https://github.com/Fred78290/vagrant-multipass#create-multipass-fake-box)
 
 ## 👟 Running the sample application
+
 - Make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)
 - In a terminal execute `vagrant up`
 - Once the vagrant image has started you should see a successful terraform apply:
-```
+
+```console
 default: vault_audit.audit_dev: Creation complete after 0s [id=file]
     default: vault_generic_endpoint.account_production: Creation complete after 0s [id=auth/userpass/users/account-production]
     default: vault_generic_secret.gateway_development: Creation complete after 0s [id=secret/development/gateway]
@@ -70,12 +75,13 @@ default: vault_audit.audit_dev: Creation complete after 0s [id=file]
     default: 
     default: ~
 ```
-*Verify the services are running*
+
+*Verify the services are running:*
 
 - `vagrant ssh`
 - `docker ps` should show all containers running:
 
-```
+```console
 CONTAINER ID   IMAGE                                COMMAND                  CREATED          STATUS          PORTS                                       NAMES
 6662939321b3   nginx:latest                         "/docker-entrypoint.…"   3 seconds ago    Up 2 seconds    0.0.0.0:4080->80/tcp                        frontend_development
 b7e1a54799b0   nginx:1.22.0-alpine                  "/docker-entrypoint.…"   5 seconds ago    Up 4 seconds    0.0.0.0:4081->80/tcp                        frontend_production
@@ -90,29 +96,30 @@ a7c0b089b10c   vault:1.8.3                          "docker-entrypoint.s…"   2
 ```
 
 ## ⚙️ Task
-Imagine the following scenario, your company is growing quickly 🚀 and increasing the number services being deployed and configured.
+
+Imagine the following scenario, your company is growing quickly 🚀 and increasing the number of services being deployed and configured.
 It's been noticed that the code in `tf/main.tf` is not very easy to maintain 😢.
 
 We would like you to complete the following tasks:
 
 - [ ] Improve the Terraform code to make it easier to add/update/remove services
 - [ ] Add a new environment called `staging` that runs each microservice
-- [ ] Add a README detailing: 
+- [ ] Add a README detailing:
   - [ ] Your design decisions, if you are new to Terraform let us know
   - [ ] How your code would fit into a CI/CD pipeline
   - [ ] Anything beyond the scope of this task that you would consider when running this code in a real production environment
 
-
 ## 📝 Candidate instructions
+
 1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository containing the content of this repository
-2. Complete the [Task](#task) :tada:
+2. Complete the [Task](#task) 🎉
 3. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) [@form3tech-interviewer-1](https://github.com/form3tech-interviewer-1) to your private repo
 4. Let us know you've completed the exercise using the link provided at the bottom of the email from our recruitment team
-
 
 ## Submission Guidance
 
 ### Shoulds
+
 - Only use plain Terraform in your solution
 - Only modify files in the `tf/` directory, `run.sh`, and `docker-compose.yml`
 - Keep the current versions of the services running in `development` and `production` environments
@@ -121,4 +128,5 @@ We would like you to complete the following tasks:
 - Structure your code in a way that allows engineers to run different versions of services in different environments
 
 ### Should Nots
+
 - Use tools that extend Terraform such as Terragrunt
