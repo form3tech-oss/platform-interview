@@ -1,0 +1,75 @@
+---
+VAULT:
+  AUTH_BACKEND:
+    TYPE: "userpass"
+  
+ACCOUNT:
+  GENERIC_SECRET_DATA_DB_USER: "account"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "ACCOUNT_DB_PASSWORD"
+  VAULT_GENERIC_SECRET_PATH: "secret/environment/account"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/environment/account"
+  VAULT_POLICY_NAME: "account-environment"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/account-environment"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "account-environment"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "ACCOUNT_GENERIC_ENDPOINT_PASSWORD"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-account"
+  DOCKER_CONTAINER_NAME: "account_environment"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-environment:8200",
+    "VAULT_USERNAME=account-environment",
+    "VAULT_PASSWORD=ACCOUNT_GENERIC_ENDPOINT_PASSWORD",
+    "ENVIRONMENT=environment"
+  ]
+  DOCKER_NETWORK_NAME: "vagrant_environment"
+ 
+GATEWAY:
+  GENERIC_SECRET_DATA_DB_USER: "gateway"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "GATEWAY_DB_PASSWORD"
+  VAULT_GENERIC_SECRET_PATH: "secret/environment/gateway"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/environment/gateway"
+  VAULT_POLICY_NAME: "gateway-environment"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/gateway-environment"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "gateway-environment"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "GATEWAY_GENERIC_ENDPOINT_PASSWORD"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-gateway"
+  DOCKER_CONTAINER_NAME: "gateway_environment"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-environment:8200",
+    "VAULT_USERNAME=gateway-environment",
+    "VAULT_PASSWORD=GATEWAY_GENERIC_ENDPOINT_PASSWORD",
+    "ENVIRONMENT=environment"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_environment"
+ 
+PAYMENT:
+  GENERIC_SECRET_DATA_DB_USER: "payment"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "PAYMENT_DB_PASSWORD"
+  VAULT_GENERIC_SECRET_PATH: "secret/environment/payment"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/environment/payment"
+  VAULT_POLICY_NAME: "payment-environment"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/payment-environment"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "payment-environment"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "PAYMENT_GENERIC_ENDPOINT_PASSWORD"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-payment"
+  DOCKER_CONTAINER_NAME: "payment_environment"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-environment:8200",
+    "VAULT_USERNAME=payment-environment",
+    "VAULT_PASSWORD=PAYMENT_GENERIC_ENDPOINT_PASSWORD"",
+    "ENVIRONMENT=environment"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_environment"
+
+FRONTEND:
+  DOCKER_IMAGE: "docker.io/nginx:latest"
+  DOCKER_CONTAINER_NAME: "frontend_environment"
+  DOCKER_ENV_VARS: []
+  FRONTEND_CONTAINER: true
+  FRONTEND_INTERNAL_PORT: 80
+  FRONTEND_EXTERNAL_PORT: FRONTEND_EXTERNAL_PORT
+  DOCKER_NETWORK_NAME: "vagrant_environment"

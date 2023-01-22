@@ -1,0 +1,75 @@
+---
+VAULT:
+  AUTH_BACKEND:
+    TYPE: "userpass"
+  
+ACCOUNT:
+  GENERIC_SECRET_DATA_DB_USER: "account"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "965d3c27-9e20-4d41-91c9-61e6631870e7"
+  VAULT_GENERIC_SECRET_PATH: "secret/development/account"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/development/account"
+  VAULT_POLICY_NAME: "account-development"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/account-development"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "account-development"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-account-development"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-account"
+  DOCKER_CONTAINER_NAME: "account_development"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-development:8200",
+    "VAULT_USERNAME=account-development",
+    "VAULT_PASSWORD=123-account-development",
+    "ENVIRONMENT=development"
+  ]
+  DOCKER_NETWORK_NAME: "vagrant_development"
+ 
+GATEWAY:
+  GENERIC_SECRET_DATA_DB_USER: "gateway"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "10350819-4802-47ac-9476-6fa781e35cfd"
+  VAULT_GENERIC_SECRET_PATH: "secret/development/gateway"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/development/gateway"
+  VAULT_POLICY_NAME: "gateway-development"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/gateway-development"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "gateway-development"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-gateway-development"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-gateway"
+  DOCKER_CONTAINER_NAME: "gateway_development"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-development:8200",
+    "VAULT_USERNAME=gateway-development",
+    "VAULT_PASSWORD=123-gateway-development",
+    "ENVIRONMENT=development"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_development"
+ 
+PAYMENT:
+  GENERIC_SECRET_DATA_DB_USER: "payment"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "a63e8938-6d49-49ea-905d-e03a683059e7"
+  VAULT_GENERIC_SECRET_PATH: "secret/development/payment"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/development/payment"
+  VAULT_POLICY_NAME: "payment-development"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/payment-development"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "payment-development"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-payment-development"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-payment"
+  DOCKER_CONTAINER_NAME: "payment_development"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-development:8200",
+    "VAULT_USERNAME=payment-development",
+    "VAULT_PASSWORD=123-payment-development",
+    "ENVIRONMENT=development"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_development"
+
+FRONTEND:
+  DOCKER_IMAGE: "docker.io/nginx:latest"
+  DOCKER_CONTAINER_NAME: "frontend_development"
+  DOCKER_ENV_VARS: []
+  FRONTEND_CONTAINER: true
+  FRONTEND_INTERNAL_PORT: 80
+  FRONTEND_EXTERNAL_PORT: 4080
+  DOCKER_NETWORK_NAME: "vagrant_development"

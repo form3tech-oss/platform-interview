@@ -12,12 +12,8 @@ Vagrant.configure("2") do |config|
     !`sysctl -in sysctl.proc_translated`.strip().to_i.zero?
   end
 
-  arch = `arch`.strip()
-  if arch == 'arm64' || (arch == 'i386' && running_rosetta()) # is M1
-    config.vm.box = "multipass"
-  else # not M1
-    config.vm.box = "ubuntu/bionic64"
-  end
+  #arch = `arch`.strip()
+  config.vm.box = "ubuntu/bionic64"
 
   config.vm.provider "multipass" do |multipass, override|
     multipass.hd_size = "10G"
@@ -45,5 +41,7 @@ Vagrant.configure("2") do |config|
     keep_color: true,
     privileged: false,
     run: "always",
-    path: "./run.sh"
+    path: "./run.sh",
+    env: {'ENV' => ENV['ENV']}
+
 end

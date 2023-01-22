@@ -1,0 +1,76 @@
+---
+VAULT:
+  AUTH_BACKEND:
+    TYPE: "userpass"
+  
+ACCOUNT:
+  GENERIC_SECRET_DATA_DB_USER: "account"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "396e73e7-34d5-4b0a-ae1b-b128aa7f9977"
+  VAULT_GENERIC_SECRET_PATH: "secret/production/account"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/production/account"
+  VAULT_POLICY_NAME: "account-production"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/account-production"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "account-production"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-account-production"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-account"
+  DOCKER_CONTAINER_NAME: "account_production"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-production:8200",
+    "VAULT_USERNAME=account-production",
+    "VAULT_PASSWORD=123-account-production",
+    "ENVIRONMENT=production"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_production"
+ 
+GATEWAY:
+  GENERIC_SECRET_DATA_DB_USER: "gateway"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "33fc0cc8-b0e3-4c06-8cf6-c7dce2705329"
+  VAULT_GENERIC_SECRET_PATH: "secret/production/gateway"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/production/gateway"
+  VAULT_POLICY_NAME: "gateway-production"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/gateway-production"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "gateway-production"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-gateway-production"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-gateway"
+  DOCKER_CONTAINER_NAME: "gateway_production"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-production:8200",
+    "VAULT_USERNAME=gateway-production",
+    "VAULT_PASSWORD=123-gateway-production",
+    "ENVIRONMENT=production"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_production"
+ 
+PAYMENT:
+  GENERIC_SECRET_DATA_DB_USER: "payment"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "821462d7-47fb-402c-a22a-a58867602e39"
+  VAULT_GENERIC_SECRET_PATH: "secret/production/payment"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/production/payment"
+  VAULT_POLICY_NAME: "payment-production"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/payment-production"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "payment-production"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-payment-production"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-payment"
+  DOCKER_CONTAINER_NAME: "payment_production"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-production:8200",
+    "VAULT_USERNAME=payment-production",
+    "VAULT_PASSWORD=123-payment-production",
+    "ENVIRONMENT=production"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_production"
+
+FRONTEND:
+  DOCKER_IMAGE: "docker.io/nginx:latest"
+  DOCKER_CONTAINER_NAME: "frontend_production"
+  DOCKER_ENV_VARS: []
+  FRONTEND_CONTAINER: true
+  FRONTEND_INTERNAL_PORT: 80
+  FRONTEND_EXTERNAL_PORT: 4081
+  DOCKER_NETWORK_NAME: "vagrant_production"

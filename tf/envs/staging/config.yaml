@@ -1,0 +1,75 @@
+---
+VAULT:
+  AUTH_BACKEND:
+    TYPE: "userpass"
+  
+ACCOUNT:
+  GENERIC_SECRET_DATA_DB_USER: "account"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "34567890-1234-5678-9012-345678901234"
+  VAULT_GENERIC_SECRET_PATH: "secret/staging/account"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/staging/account"
+  VAULT_POLICY_NAME: "account-staging"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/account-staging"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "account-staging"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-account-staging"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-account"
+  DOCKER_CONTAINER_NAME: "account_staging"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-staging:8200",
+    "VAULT_USERNAME=account-staging",
+    "VAULT_PASSWORD=123-account-staging",
+    "ENVIRONMENT=staging"
+  ]
+  DOCKER_NETWORK_NAME: "vagrant_staging"
+ 
+GATEWAY:
+  GENERIC_SECRET_DATA_DB_USER: "gateway"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "56789012-3456-7890-1234-567890123456"
+  VAULT_GENERIC_SECRET_PATH: "secret/staging/gateway"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/staging/gateway"
+  VAULT_POLICY_NAME: "gateway-staging"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/gateway-staging"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "gateway-staging"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-gateway-staging"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-gateway"
+  DOCKER_CONTAINER_NAME: "gateway_staging"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-staging:8200",
+    "VAULT_USERNAME=gateway-staging",
+    "VAULT_PASSWORD=123-gateway-staging",
+    "ENVIRONMENT=staging"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_staging"
+ 
+PAYMENT:
+  GENERIC_SECRET_DATA_DB_USER: "payment"
+  GENERIC_SECRET_DATA_DB_PASSWORD: "78901234-5678-9012-3456-789012345678"
+  VAULT_GENERIC_SECRET_PATH: "secret/staging/payment"
+  VAULT_POLICY_CAPABILITIES: "list,read"
+  VAULT_POLICY_PATH: "secret/data/staging/payment"
+  VAULT_POLICY_NAME: "payment-staging"
+  VAULT_GENERIC_ENDPOINT_PATH: "auth/userpass/users/payment-staging"
+  VAULT_GENERIC_ENDPOINT_POLICIES: "payment-staging"
+  VAULT_GENERIC_ENDPOINT_PASSWORD: "123-payment-staging"
+  DOCKER_IMAGE: "form3tech-oss/platformtest-payment"
+  DOCKER_CONTAINER_NAME: "payment_staging"
+  DOCKER_ENV_VARS: [
+    "VAULT_ADDR=http://vault-staging:8200",
+    "VAULT_USERNAME=payment-staging",
+    "VAULT_PASSWORD=123-payment-staging",
+    "ENVIRONMENT=staging"
+  ]
+  FRONTEND_CONTAINER: false
+  DOCKER_NETWORK_NAME: "vagrant_staging"
+
+FRONTEND:
+  DOCKER_IMAGE: "docker.io/nginx:latest"
+  DOCKER_CONTAINER_NAME: "frontend_staging"
+  DOCKER_ENV_VARS: []
+  FRONTEND_CONTAINER: true
+  FRONTEND_INTERNAL_PORT: 80
+  FRONTEND_EXTERNAL_PORT: 4082
+  DOCKER_NETWORK_NAME: "vagrant_staging"

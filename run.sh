@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
 set -e
+echo $ENV
+
+export DOCKER_BUILDKIT=1
 
 echo Installing docker-compose
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
 arch=$(uname -m)
 pro=$(dpkg --print-architecture)
-terraform_version="1.2.5"
-sudo curl -L "https://github.com/docker/compose/releases/download/v2.1.1/docker-compose-${os}-${arch}" -o /usr/local/bin/docker-compose
+terraform_version="1.3.7"
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-${os}-${arch}" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 echo Installing terraform onto machine...
@@ -26,7 +29,16 @@ docker build ./services/payment -t form3tech-oss/platformtest-payment
 docker-compose up -d
 popd
 echo Applying terraform script
-pushd /vagrant/tf
-terraform init -upgrade
-terraform apply -auto-approve
+pushd /vagrant/tf/envs
+for dir in */ ; do
+    if [ "$dir" = "template/" ]; then
+        echo "skipping environment template folder"
+        continue
+    else
+        echo "Applying terraform in $dir folder..."
+        terraform -chdir=$dir/ init -upgrade
+        terraform -chdir=$dir/ apply -auto-approve
+    fi
+done
+
 popd

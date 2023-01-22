@@ -1,110 +1,127 @@
-# Form3 Platform Interview
+* Design decisions
 
-Platform engineers at Form3 build highly available distributed systems using infrastructure as code. Our take home test is designed to evaluate real world activities that are involved with this role. We recognise that this may not be as mentally challenging and may take longer to implement than some algorithmic tests that are often seen in interview exercises. Our approach however helps ensure that you will be working with a team of engineers with the necessary practical skills for the role (as well as a diverse range of technical wizardry).
+As the rules stated that I should not use other tooling than vanilla terraform, I opted
+for the following design:
+
+- Add a Makefile to ease operations
+- Have a common terraform folder, which contains common iac resources. Symlink the common 
+  terraform files in each environment
+- Put each environment in a dedicated folder
+- Add a config.yaml file for each environment, to define its specific config
+- Have each environment symlink the common files, and call vault and docker terraform modules
+- Create a template environment folder, to ease spinning up new environments
+- Create 2 terraform modules: vault and docker
+- Add a bash script to create a new environment from the template
+- Modify run.sh, adding a bash for loop to parse all environments terraform files (except the  
+  template)
 
 
-## 🧪 Sample application
-The sample application consists of four services:
+* CICD flow
 
-```
-┌─────────────┐     ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│             │     │              │    │              │    │              │
-│   payment   │     │   account    │    │   gateway    │    │   frontend   │
-│             │     │              │    │              │    │              │
-└─────────┬───┘     └──────┬───────┘    └──────┬───────┘    └──────────────┘
-          │                │                   │
-          │                │                   │
-          │                ▼                   │
-          │         ┌──────────────┐           │
-          │         │              │           │
-          └────────►│    vault     │◄──────────┘
-                    │              │
-                    └──────────────┘
-```                    
+I would run the actual setup this way in a pipeline:
 
-Three of those services connect to [vault](https://www.vaultproject.io/) to retrieve database credentials. The frontend container serves a static file.
+- A job to build the images for each microservice, if there are code changes
+- Decide which deployment flow we want. For starters, I would deploy on master merges
+- With the current vagrant deployment, it is not possible to assure high availability, as each 
+  service runs with 1 container only, meaning that when a new image is deployed, there's downtime
 
-The project structure is as follows:
+  So assuming this, I would have a job to run `make deploy`, which applies the terraform in all environment folders
 
-```
-.
-├── docker-compose.yml
-├── form3.crt
-├── README.md
-├── run.sh
-├── Vagrantfile
-├── services
-│   ├── account
-│   ├── gateway
-│   └── payment
-└── tf
-    └── main.tf
-```
-1. Refactoring the Terraform code found in the [tf](./tf) directory is the primary focus of this test.
-1. `Vagrantfile`, `run.sh` and `docker-compose.yml` are used to bootstrap this sample application; refactoring these files is not part of the test, but these files may be modified if your solution requires it.
-1. `form3.crt` is used to ease sandboxed running of the submission by Form3 staff and can be ignored.
-1. The `services` code is used to simulate a microservices architecture that connects to vault to retrieve database credentials. The code and method of connecting to vault can be ignored for the purposes of this test.
+- Testing. As it is right now, it's not a very exciting app, but as features get added, we 
+  should add some testing to the pipeline. 
 
-## Using an M1 Mac?
-If you are using an M1 Mac then you need to install some additional tools:
-- [Multipass](https://github.com/canonical/multipass/releases) install the latest release for your operating system
-- [Multipass provider for vagrant](https://github.com/Fred78290/vagrant-multipass)
-    - [Install the plugin](https://github.com/Fred78290/vagrant-multipass#plugin-installation)
-    - [Create the multipass vagrant box](https://github.com/Fred78290/vagrant-multipass#create-multipass-fake-box)
+  For example, quick, smoke tests for pull requests and full regression tests before deployments are allowed.
+  
+  All the testing should be run in architecturally identical, but ephemeral, clusters.
 
-## 👟 Running the sample application
-- Make sure you have installed the [vagrant prerequisites](https://learn.hashicorp.com/tutorials/vagrant/getting-started-index#prerequisites)
-- In a terminal execute `vagrant up`
-- Once the vagrant image has started you should see a successful terraform apply:
-```
-default: vault_audit.audit_dev: Creation complete after 0s [id=file]
-    default: vault_generic_endpoint.account_production: Creation complete after 0s [id=auth/userpass/users/account-production]
-    default: vault_generic_secret.gateway_development: Creation complete after 0s [id=secret/development/gateway]
-    default: vault_generic_endpoint.gateway_production: Creation complete after 0s [id=auth/userpass/users/gateway-production]
-    default: vault_generic_endpoint.payment_production: Creation complete after 0s [id=auth/userpass/users/payment-production]
-    default: vault_generic_endpoint.gateway_development: Creation complete after 0s [id=auth/userpass/users/gateway-development]
-    default: vault_generic_endpoint.account_development: Creation complete after 0s [id=auth/userpass/users/account-development]
-    default: vault_generic_endpoint.payment_development: Creation complete after 1s [id=auth/userpass/users/payment-development]
-    default: 
-    default: Apply complete! Resources: 30 added, 0 changed, 0 destroyed.
-    default: 
-    default: ~
-```
-*Verify the services are running*
 
-- `vagrant ssh`
-- `docker ps` should show all containers running:
+* PRODUCTION READINESS
 
-```
-CONTAINER ID   IMAGE                                COMMAND                  CREATED          STATUS          PORTS                                       NAMES
-6662939321b3   nginx:latest                         "/docker-entrypoint.…"   3 seconds ago    Up 2 seconds    0.0.0.0:4080->80/tcp                        frontend_development
-b7e1a54799b0   nginx:1.22.0-alpine                  "/docker-entrypoint.…"   5 seconds ago    Up 4 seconds    0.0.0.0:4081->80/tcp                        frontend_production
-4a636fcd2380   form3tech-oss/platformtest-payment   "/go/bin/payment"        16 seconds ago   Up 9 seconds                                                payment_development
-3f609757e28e   form3tech-oss/platformtest-account   "/go/bin/account"        16 seconds ago   Up 12 seconds                                               account_production
-cc7f27197275   form3tech-oss/platformtest-account   "/go/bin/account"        16 seconds ago   Up 10 seconds                                               account_development
-caffcaf61970   form3tech-oss/platformtest-payment   "/go/bin/payment"        16 seconds ago   Up 8 seconds                                                payment_production
-c4b7132104ff   form3tech-oss/platformtest-gateway   "/go/bin/gateway"        16 seconds ago   Up 13 seconds                                               gateway_development
-2766640654f3   form3tech-oss/platformtest-gateway   "/go/bin/gateway"        16 seconds ago   Up 11 seconds                                               gateway_production
-96e629f21d56   vault:1.8.3                          "docker-entrypoint.s…"   2 minutes ago    Up 2 minutes    0.0.0.0:8301->8200/tcp, :::8301->8200/tcp   vagrant-vault-production-1
-a7c0b089b10c   vault:1.8.3                          "docker-entrypoint.s…"   2 minutes ago    Up 2 minutes    0.0.0.0:8201->8200/tcp, :::8201->8200/tcp   vagrant-vault-development-1
-```
+Ok, so this exercise is over, and we are thinking to think about production readiness. Of course, the way it's architectured is not good enough.
 
-## ⚙️ Task
-Imagine the following scenario, your company is growing quickly 🚀 and increasing the number services being deployed and configured.
-It's been noticed that the code in `tf/main.tf` is not very easy to maintain 😢.
+I would start thinking and planning on:
 
-The team would like to work on the following problems:
+- Depending on when this project is going to be run, the question comes about where to place the 
+  load balancer/s. Lets assume the target is a cloud provider, AWS.
+  
+  I would use an AWS Network Load Balancer, and Nginx ingress. 
+  https://github.com/kubernetes/ingress-nginx
 
-- Improve the Terraform code to make it easier to add/update/remove services
-- Add a new environment called `staging` that runs each microservice
-- Structure your code in a way that will segregate environments
-- Add a README detailing your design decisions, if you are new to Terraform let us know
-- Document in your README how your code would fit into a CI/CD pipeline
-- Describe anything beyond the scope of this task that you would consider when running this code in a real production environment
-- 🚨 All environments (including staging) should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
+  - DNS records. Annotate services that need dns records, with external-dns annotations in the charts
 
-## 📝 Candidate instructions
-1. Create a private [GitHub](https://help.github.com/en/articles/create-a-repo) repository containing the content of this repository
-2. Complete the [Task](#task) :tada:
-3. [Invite](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository) [@form3tech-interviewer-1](https://github.com/form3tech-interviewer-1) to your private repo
-4. Let us know you've completed the exercise using the link provided at the bottom of the email from our recruitment team
+- If we run k8s in the cloud (EKS for example), ensure the worker nodes run at least in 2   
+  availability zones. 
+  
+  EKS control planes already run in 3 availability zones.
+
+  https://aws.github.io/aws-eks-best-practices/reliability/docs/controlplane/
+
+- I would plan to k8size this setup, using a helm chart for each service
+
+- Ensure each service runs at least 2 replicas for high availability
+
+- Define good health and liveness probes for each service
+
+- Define resource requests and limits. For starters, as probably we dont have enough historic 
+  usage data, use Goldilocks to get resource usage insights. And once we have enough working data, set requests and limits. Iteration will be needed probably.
+
+  Docs here https://github.com/FairwindsOps/goldilocks
+
+- Refactor dockerfiles, in order to reduce attack vector and image size, use multistage builds.
+  For go applications, use whatever you need for the build stage, and scratch as the base image for the final stage,as it needs only to run the go binary. (this is already done in this work)
+
+- Security. Depending on which cloud we run, offload tls traffic into the load balancer, or 
+  deploy cert-manager in the cluster, so tls traffic arrives at the cluster, and it's offloaded at the nginx-ingress proxies.
+
+  Having cert-manager in-cluster adds logic to the flow, but eases vendor lock-in -compared to use AWS certificates.
+
+  In this example, as I already proposed using an AWS NLB, I would offload tls certificates there. 
+
+  Of course you could have end-to-end encryption as well,extra work but might be required in some high regulated industries. 
+
+  So the flow would be: TLS offloaded at NLB- new tls handshake established, from the NLB to nginx-ingress, which will offer a Lets-encrypt certificate managed by cert-manager. Traffic inside the cluster would be HTTP.
+
+  But, if we want to have end-to-end encryption as well inside the cluster, we should use a service mesh like Istio,to have full end-to-end encryption between microservices.
+  
+  But that adds extra complexity, and might not be needed in most usecases.
+
+- Security II. Add a docker image vulnerability scanner at image build time, in the pipeline. 
+  Use trivy for example as tooling. 
+
+  Define some hard rules to abort the image build and deploy if there are too many critical vulnerabilities - so either fix those vulnerabilities if we maintain the image, or we should find a more secure base image 
+
+- Use a gitops flow for the deploys. As tooling, Flux, argocd. Let's pick flux for example
+
+- Create a kustomize flow for flux, in order to apply all the manifests required for each service
+
+- Secrets management. We are keeping the app secrets in plain text in the repo. So let's use 
+  sops and use AWS KMS for example, as a key backend
+  
+  This way secrets can be committed cyphered with the KMS key to the repo. And decrypt them automatically with flux.
+
+- Secrets management II. We are running a local vault for each service, in a single container. 
+  As designing vault setups can be quite complex, I would ensure, for now, they run locally, but with high availability (having 2 containers for each vault server)
+
+- Testing. I already covered that in the CICD section.
+
+- Storage. Currently, the services are stateless, but if in the future this changes, we need to 
+  think about it. Adding PersistentVolumes as needed, and claiming them in the pods.
+
+- Observability. Deploy grafana's LGTM stack in order to get full observability of the services
+  https://github.com/grafana/helm-charts/tree/main/charts, using Loki, Grafana, Tempo, and Mimir.
+
+  Depending on how many other products we run, it could pay off cost-wise, to have a centralized observability platform, using the same grafana LGTM stack, ship logs/metrics/traces from all the products to this central platform, and have dashboards and alerting
+
+    - Alerting. Define alerting in grafana dashboards, and use grafana alerting to notify 
+      whenever/however is needed, in case of app issues.  
+
+- Cost savings. Depending on where this infrastructure is run, think about design 
+  considerations. As it is now, this is a stateless application, so we do not need to care about storage considerations.
+  
+  About backend infrastructure, If for example, we run this on AWS, I would run this on EKS with spot instances - not with fargate, since it does not allow daemonsets to run.
+
+  Running on spot instances allows for massive cost savings. You just need to define poddisruptionbudgets for each service, so in case of spot instance interruptions, replicas can be evicted from the
+  soon-to-be-evicted node.
+
+- CDN. The frontends do not run any static content right now, besides the sample Nginx page. But 
+  in a normal application, static assets should be exposed as cdn resources.
