@@ -30,6 +30,7 @@ provider "vault" {
   token   = "083672fc-4471-4ec4-9b59-a285e463a973"
 }
 
+# Creating Vault Audit Devices 
 resource "vault_audit" "audit_dev" {
   provider = vault.vault_dev
   type     = "file"
@@ -47,6 +48,8 @@ resource "vault_audit" "audit_prod" {
     file_path = "/vault/logs/audit"
   }
 }
+
+# Creating Vautl Auth Backend
 
 resource "vault_auth_backend" "userpass_dev" {
   provider = vault.vault_dev
