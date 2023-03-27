@@ -16,36 +16,36 @@ resource "vault_auth_backend" "userpass" {
 }
 
 module "account_service" {
-  source            = "../modules/vault"
+  source            = "../modules/service_setup"
   environment       = var.environment
   service           = "account"
-  db_user           = var.account_service.db_user
-  db_password       = var.account_service.db_password
-  docker_image      = var.account_service.docker_image
-  endpoint_password = var.account_service.endpoint_password
+  db_user           = var.account_service_credentials.db_user
+  db_password       = var.account_service_credentials.db_password
+  docker_image      = var.account_service_docker_image
+  endpoint_password = var.account_service_credentials.endpoint_password
   depends_on        = [vault_auth_backend.userpass]
 }
 
 module "gateway_service" {
-  source            = "../modules/vault"
+  source            = "../modules/service_setup"
   environment       = var.environment
   service           = "gateway"
-  db_user           = var.gateway_service.db_user
-  db_password       = var.gateway_service.db_password
-  docker_image      = var.gateway_service.docker_image
-  endpoint_password = var.gateway_service.endpoint_password
+  db_user           = var.gateway_service_credentials.db_user
+  db_password       = var.gateway_service_credentials.db_password
+  docker_image      = var.gateway_service_docker_image
+  endpoint_password = var.gateway_service_credentials.endpoint_password
   depends_on        = [vault_auth_backend.userpass]
 }
 
 module "payment_service" {
-  source       = "../modules/vault"
+  source       = "../modules/service_setup"
   environment  = var.environment
   service      = "payment"
-  db_user      = var.payment_service.db_user
-  db_password  = var.payment_service.db_password
-  docker_image = var.payment_service.docker_image
+  db_user      = var.payment_service_credentials.db_user
+  db_password  = var.payment_service_credentials.db_password
+  docker_image = var.payment_service_docker_image
 
-  endpoint_password = var.payment_service.endpoint_password
+  endpoint_password = var.payment_service_credentials.endpoint_password
   depends_on        = [vault_auth_backend.userpass]
 }
 
@@ -59,7 +59,7 @@ resource "docker_container" "frontend" {
   }
 
   networks_advanced {
-    name = "vagrant-production"
+    name = "vagrant-${var.environment}"
   }
 
   lifecycle {

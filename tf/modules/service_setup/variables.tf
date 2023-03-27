@@ -21,3 +21,13 @@ variable "docker_image" {
 variable "endpoint_password" {
   type = string
 }
+
+variable "vault_addr" {
+  type    = string
+  default = ""
+}
+
+variable "vault_username" {
+  type    = string
+  default = ""
+}

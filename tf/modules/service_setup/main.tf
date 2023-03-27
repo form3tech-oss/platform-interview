@@ -1,6 +1,11 @@
+locals {
+  vault_addr     = "http://vault-${var.environment}:8200"
+  vault_username = "${var.service}-${var.environment}"
+}
+
 ## Vault
 resource "vault_generic_secret" "this" {
-  path = "secret/${var.environment}/${var.service}"
+  path = format("secret/%s/%s", var.environment, var.service)
 
   data_json = <<EOT
 {
@@ -15,7 +20,7 @@ resource "vault_policy" "this" {
 
   policy = <<EOT
 
-path "secret/data/${var.environment}/${var.service}" {
+path "${format("secret/data/%s/%s", var.environment, var.service)}" {
     capabilities = ["list", "read"]
 }
 
@@ -40,8 +45,8 @@ resource "docker_container" "this" {
   name  = "${var.service}_${var.environment}"
 
   env = [
-    "VAULT_ADDR=http://vault-${var.environment}:8200",
-    "VAULT_USERNAME=${var.service}-${var.environment}",
+    "VAULT_ADDR=${length(var.vault_addr) > 0 ? var.vault_addr : local.vault_addr}",
+    "VAULT_USERNAME=${length(var.vault_addr) > 0 ? var.vault_username : local.vault_username}",
     "VAULT_PASSWORD=${var.endpoint_password}",
     "ENVIRONMENT=${var.environment}"
   ]
