@@ -6,7 +6,7 @@ echo Installing docker-compose
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
 arch=$(uname -m)
 pro=$(dpkg --print-architecture)
-terraform_version="1.2.5"
+terraform_version="1.4.2"
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.1.1/docker-compose-${os}-${arch}" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
@@ -25,8 +25,18 @@ docker build ./services/gateway -t form3tech-oss/platformtest-gateway
 docker build ./services/payment -t form3tech-oss/platformtest-payment
 docker-compose up -d
 popd
-echo Applying terraform script
-pushd /vagrant/tf
+echo Applying terraform script in development
+pushd /vagrant/tf/development
+terraform init -upgrade
+terraform apply -auto-approve
+popd
+echo Applying terraform script in staging
+pushd /vagrant/tf/staging
+terraform init -upgrade
+terraform apply -auto-approve
+popd
+echo Applying terraform script in production
+pushd /vagrant/tf/production
 terraform init -upgrade
 terraform apply -auto-approve
 popd
