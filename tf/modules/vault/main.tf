@@ -1,16 +1,4 @@
-resource "vault_audit" "this" {
-  type = "file"
-
-  options = {
-    file_path = "/vault/logs/audit"
-  }
-}
-
-resource "vault_auth_backend" "userpass" {
-  type = "userpass"
-}
-
-# Maybe should pass the whole data_json as var
+## Vault
 resource "vault_generic_secret" "this" {
   path = "secret/${var.environment}/${var.service}"
 
@@ -35,7 +23,6 @@ EOT
 }
 
 resource "vault_generic_endpoint" "this" {
-  depends_on           = [vault_auth_backend.userpass]
   path                 = format("auth/userpass/users/%s-%s", var.service, var.environment)
   ignore_absent_fields = true
 
@@ -45,4 +32,25 @@ resource "vault_generic_endpoint" "this" {
   "password": "${var.endpoint_password}"
 }
 EOT
+}
+
+## Docker Container
+resource "docker_container" "this" {
+  image = var.docker_image
+  name  = "${var.service}_${var.environment}"
+
+  env = [
+    "VAULT_ADDR=http://vault-${var.environment}:8200",
+    "VAULT_USERNAME=${var.service}-${var.environment}",
+    "VAULT_PASSWORD=${var.endpoint_password}",
+    "ENVIRONMENT=${var.environment}"
+  ]
+
+  networks_advanced {
+    name = "vagrant-${var.environment}"
+  }
+
+  lifecycle {
+    ignore_changes = all
+  }
 }

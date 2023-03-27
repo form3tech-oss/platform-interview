@@ -14,6 +14,10 @@ variable "db_password" {
   type = string
 }
 
+variable "docker_image" {
+  type = string
+}
+
 variable "endpoint_password" {
   type = string
 }
