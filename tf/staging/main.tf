@@ -1,5 +1,5 @@
 provider "vault" {
-  address = "http://localhost:8401"
+  address = "http://localhost:8301"
   token   = var.vault_token
 }
 
@@ -38,13 +38,12 @@ module "gateway_service" {
 }
 
 module "payment_service" {
-  source       = "../modules/vault"
-  environment  = var.environment
-  service      = "payment"
-  db_user      = var.payment_service.db_user
-  db_password  = var.payment_service.db_password
-  docker_image = var.payment_service.docker_image
-
+  source            = "../modules/vault"
+  environment       = var.environment
+  service           = "payment"
+  db_user           = var.payment_service.db_user
+  db_password       = var.payment_service.db_password
+  docker_image      = var.payment_service.docker_image
   endpoint_password = var.payment_service.endpoint_password
   depends_on        = [vault_auth_backend.userpass]
 }
@@ -55,11 +54,11 @@ resource "docker_container" "frontend" {
 
   ports {
     internal = 80
-    external = 4080
+    external = 4090
   }
 
   networks_advanced {
-    name = "vagrant-production"
+    name = "vagrant-staging"
   }
 
   lifecycle {
