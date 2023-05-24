@@ -34,6 +34,7 @@ Vagrant.configure("2") do |config|
                       inline: <<-SCRIPT
     sudo mv /tmp/form3.crt /usr/local/share/ca-certificates/form3_ca.crt
     sudo update-ca-certificates
+    sudo ip link set dev $(ip a|grep -E "^[0-9]*:" | grep -v LOOPBACK|awk -F: '{print $2}' |grep -v docker) mtu 1024
   SCRIPT
 
   config.vm.provision :docker
