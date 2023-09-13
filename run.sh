@@ -26,12 +26,12 @@ docker build ./services/gateway -t form3tech-oss/platformtest-gateway
 docker build ./services/payment -t form3tech-oss/platformtest-payment
 docker-compose up -d
 popd
-echo Applying terraform script for dev
-pushd /vagrant/tf/dev
-terraform init -upgrade
-terraform apply -auto-approve
-echo Applying terraform script for prod
-pushd /vagrant/tf/prod
-terraform init -upgrade
-terraform apply -auto-approve
-popd
+# echo Applying terraform script for dev
+# pushd /vagrant/tf/dev
+# terraform init -upgrade
+# terraform apply -auto-approve
+# echo Applying terraform script for prod
+# pushd /vagrant/tf/prod
+# terraform init -upgrade
+# terraform apply -auto-approve
+# popd
