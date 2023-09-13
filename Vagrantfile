@@ -12,11 +12,23 @@ Vagrant.configure("2") do |config|
     !`sysctl -in sysctl.proc_translated`.strip().to_i.zero?
   end
 
-  arch = `arch`.strip()
-  if arch == 'arm64' || (arch == 'i386' && running_rosetta()) # is M1
-    config.vm.box = "multipass"
-  else # not M1
+  os=`uname`.strip()
+  if os == "Darwin"
+    arch = `arch`.strip()
+    if arch == 'arm64' || (arch == 'i386' && running_rosetta()) # is M1
+      config.vm.box = "multipass"
+    end
+  elsif os == "Linux"
     config.vm.box = "ubuntu/bionic64"
+    config.vm.provider "libvirt" do |libvirt|
+      unless Vagrant.has_plugin?("vagrant-libvirt")
+        raise 'vagrant-libvirt is not installed, you can install with (vagrant plugin install vagrant-libvirt)'
+      end
+      unless Vagrant.has_plugin?("vagrant-mutate")
+        raise 'vagrant-mutate is not installed, you can install with (vagrant plugin install vagrant-mutate)'
+      end
+      config.vm.box = "generic/ubuntu1804"
+    end
   end
 
   config.vm.provider "multipass" do |multipass, override|
