@@ -17,6 +17,7 @@ pushd "${HOME}/bin"
 
 wget -q "https://releases.hashicorp.com/terraform/${terraform_version}/terraform_${terraform_version}_linux_${pro}.zip"
 unzip -q -o "terraform_${terraform_version}_linux_${pro}.zip"
+# shellcheck disable=SC1091
 . "${HOME}/.profile"
 popd
 pushd /vagrant

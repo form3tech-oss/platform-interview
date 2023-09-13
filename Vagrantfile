@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
       config.vm.box = "multipass"
     end
   elsif os == "Linux"
-    config.vm.box = "ubuntu/bionic64"
+    config.vm.box = "ubuntu/focal64"
     config.vm.provider "libvirt" do |libvirt|
       unless Vagrant.has_plugin?("vagrant-libvirt")
         raise 'vagrant-libvirt is not installed, you can install with (vagrant plugin install vagrant-libvirt)'
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
       unless Vagrant.has_plugin?("vagrant-mutate")
         raise 'vagrant-mutate is not installed, you can install with (vagrant plugin install vagrant-mutate)'
       end
-      config.vm.box = "generic/ubuntu1804"
+      config.vm.box = "generic/ubuntu2004"
     end
   end
 
