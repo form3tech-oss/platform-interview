@@ -13,6 +13,122 @@ terraform {
   }
 }
 
+
+/* 
+variables section
+*/
+
+variable "token" {
+  type        = string
+  default     = "f23612cf-824d-4206-9e94-e31a6dc8ee8d"
+  description = "dev token"
+}
+
+variable "vault_services_vars" {
+  type = map(object({
+    name                          = string
+    secret_path                   = string
+    secret_data_json              = string
+    policy_name                   = string
+    policy                        = string
+    endpoint_path                 = string
+    endpoint_ignore_absent_fields = bool
+    username                      = string
+    password                      = string
+    endpoint_data_json            = string
+  }))
+  default = {
+    "account" = {
+      name                          = "account"
+      secret_path                   = "secret/development/account"
+      secret_data_json              = <<EOT
+      {
+        "db_user" : "account",
+        "db_password" : "965d3c27-9e20-4d41-91c9-61e6631870e7"
+      }
+EOT
+      policy_name                   = "account_development"
+      policy                        = <<EOT
+        path "secret/data/development/account" {
+        capabilities = ["list", "read"]
+      }
+EOT
+      endpoint_path                 = "auth/userpass/users/account_development"
+      endpoint_ignore_absent_fields = true
+      username                      = "account_development"
+      password                      = "123-account-development"
+      endpoint_data_json            = <<EOT
+      {
+        "policies" : ["account_development"],
+        "password" : "123-account-development"
+      }
+EOT
+    },
+    "gateway" = {
+      name             = "gateway"
+      secret_path      = "secret/development/gateway"
+      secret_data_json = <<EOT
+      {
+        "db_user" : "gateway",
+        "db_password" : "10350819-4802-47ac-9476-6fa781e35cfd"
+      }
+EOT
+      policy_name      = "gateway_development"
+      policy           = <<EOT
+        path "secret/data/development/gateway" {
+        capabilities = ["list", "read"]
+      }
+EOT
+
+      endpoint_path                 = "auth/userpass/users/gateway_development"
+      endpoint_ignore_absent_fields = true
+      username                      = "gateway_development"
+      password                      = "123-gateway-development"
+      endpoint_data_json            = <<EOT
+      {
+        "policies" : ["gateway_development"],
+        "password" : "123-gateway-development"
+      }
+EOT
+    },
+    "payment" = {
+      name                          = "payment"
+      secret_path                   = "secret/development/payment"
+      secret_data_json              = <<EOT
+      {
+        "db_user" : "payment",
+        "db_password" : "a63e8938-6d49-49ea-905d-e03a683059e7"
+      }
+EOT
+      policy_name                   = "payment_development"
+      policy                        = <<EOT
+        path "secret/data/development/payment" {
+        capabilities = ["list", "read"]
+      }
+EOT
+      endpoint_path                 = "auth/userpass/users/payment_development"
+      endpoint_ignore_absent_fields = true
+      username                      = "payment_development"
+      password                      = "123-payment-development"
+      endpoint_data_json            = <<EOT
+      {
+        "policies" : ["payment_development"],
+        "password" : "123-payment-development"
+      }
+EOT
+    }
+  }
+}
+
+/* 
+variables section
+*/
+
+
+/* 
+resources section
+*/
+
 provider "vault" {
   alias   = "vault_dev"
   address = "http://localhost:8201"
@@ -33,201 +149,38 @@ resource "vault_auth_backend" "userpass_dev" {
   type     = "userpass"
 }
 
-
-resource "vault_generic_secret" "account_development" {
-  for_each  = toset(var.user_names)
+resource "vault_generic_secret" "payment_development" {
+  for_each  = var.vault_services_vars
   provider  = vault.vault_dev
-  path      = each.secret_path
-  data_json = each.secret_data_json
+  path      = each.value.secret_path
+  data_json = each.value.secret_data_json
 }
 
-resource "vault_policy" "account_development" {
-  for_each = toset(var.user_names)
+resource "vault_policy" "policy_development" {
+  for_each = var.vault_services_vars
   provider = vault.vault_dev
-  name     = each.policy_name
-  policy   = each.policy
+  name     = each.value.policy_name
+  policy   = each.value.policy
 }
 
-resource "vault_generic_endpoint" "account_development" {
-  for_each             = toset(var.user_names)
+resource "vault_generic_endpoint" "endpoint_development" {
+  for_each             = var.vault_services_vars
   provider             = vault.vault_dev
   depends_on           = [vault_auth_backend.userpass_dev]
-  path                 = each.endpoint_path
-  ignore_absent_fields = each.endpoint_ignore_absent_fields
-  data_json            = each.endpoint_data_json
+  path                 = each.value.endpoint_path
+  ignore_absent_fields = each.value.endpoint_ignore_absent_fields
+  data_json            = each.value.endpoint_data_json
 }
 
-
-
-
-# #####
-# resource "vault_generic_secret" "account_development" {
-#   provider = vault.vault_dev
-#   path     = "secret/development/account"
-
-#   data_json = <<EOT
-# {
-#   "db_user":   "account",
-#   "db_password": "965d3c27-9e20-4d41-91c9-61e6631870e7"
-# }
-# EOT
-# }
-
-# resource "vault_policy" "account_development" {
-#   provider = vault.vault_dev
-#   name     = "account-development"
-
-#   policy = <<EOT
-
-# path "secret/data/development/account" {
-#     capabilities = ["list", "read"]
-# }
-
-# EOT
-# }
-
-# resource "vault_generic_endpoint" "account_development" {
-#   provider             = vault.vault_dev
-#   depends_on           = [vault_auth_backend.userpass_dev]
-#   path                 = "auth/userpass/users/account-development"
-#   ignore_absent_fields = true
-
-#   data_json = <<EOT
-# {
-#   "policies": ["account-development"],
-#   "password": "123-account-development"
-# }
-# EOT
-# }
-# #####
-
-#####
-
-# resource "vault_generic_secret" "gateway_development" {
-#   provider = vault.vault_dev
-#   path     = "secret/development/gateway"
-
-#   data_json = <<EOT
-# {
-#   "db_user":   "gateway",
-#   "db_password": "10350819-4802-47ac-9476-6fa781e35cfd"
-# }
-# EOT
-# }
-
-# resource "vault_policy" "gateway_development" {
-#   provider = vault.vault_dev
-#   name     = "gateway-development"
-
-#   policy = <<EOT
-
-# path "secret/data/development/gateway" {
-#     capabilities = ["list", "read"]
-# }
-
-# EOT
-# }
-
-# resource "vault_generic_endpoint" "gateway_development" {
-#   provider             = vault.vault_dev
-#   depends_on           = [vault_auth_backend.userpass_dev]
-#   path                 = "auth/userpass/users/gateway-development"
-#   ignore_absent_fields = true
-
-#   data_json = <<EOT
-# {
-#   "policies": ["gateway-development"],
-#   "password": "123-gateway-development"
-# }
-# EOT
-# }
-# resource "vault_generic_secret" "payment_development" {
-#   provider = vault.vault_dev
-#   path     = "secret/development/payment"
-
-#   data_json = <<EOT
-# {
-#   "db_user":   "payment",
-#   "db_password": "a63e8938-6d49-49ea-905d-e03a683059e7"
-# }
-# EOT
-# }
-
-# resource "vault_policy" "payment_development" {
-#   provider = vault.vault_dev
-#   name     = "payment-development"
-
-#   policy = <<EOT
-
-# path "secret/data/development/payment" {
-#     capabilities = ["list", "read"]
-# }
-
-# EOT
-# }
-
-# resource "vault_generic_endpoint" "payment_development" {
-#   provider             = vault.vault_dev
-#   depends_on           = [vault_auth_backend.userpass_dev]
-#   path                 = "auth/userpass/users/payment-development"
-#   ignore_absent_fields = true
-
-#   data_json = <<EOT
-# {
-#   "policies": ["payment-development"],
-#   "password": "123-payment-development"
-# }
-# EOT
-# }
-
-resource "docker_container" "account_development" {
-  image = "form3tech-oss/platformtest-account"
-  name  = "account_development"
+resource "docker_container" "container_development" {
+  for_each = var.vault_services_vars
+  image    = "form3tech-oss/platformtest-${each.value.name}"
+  name     = each.value.policy_name
 
   env = [
     "VAULT_ADDR=http://vault-development:8200",
-    "VAULT_USERNAME=account-development",
-    "VAULT_PASSWORD=123-account-development",
-    "ENVIRONMENT=development"
-  ]
-
-  networks_advanced {
-    name = "vagrant_development"
-  }
-
-  lifecycle {
-    ignore_changes = all
-  }
-}
-
-resource "docker_container" "gateway_development" {
-  image = "form3tech-oss/platformtest-gateway"
-  name  = "gateway_development"
-
-  env = [
-    "VAULT_ADDR=http://vault-development:8200",
-    "VAULT_USERNAME=gateway-development",
-    "VAULT_PASSWORD=123-gateway-development",
-    "ENVIRONMENT=development"
-  ]
-
-  networks_advanced {
-    name = "vagrant_development"
-  }
-
-  lifecycle {
-    ignore_changes = all
-  }
-}
-
-resource "docker_container" "payment_development" {
-  image = "form3tech-oss/platformtest-payment"
-  name  = "payment_development"
-
-  env = [
-    "VAULT_ADDR=http://vault-development:8200",
-    "VAULT_USERNAME=payment-development",
-    "VAULT_PASSWORD=123-payment-development",
+    "VAULT_USERNAME=${each.value.username}",
+    "VAULT_PASSWORD=${each.value.password}",
     "ENVIRONMENT=development"
   ]
 
@@ -257,3 +210,7 @@ resource "docker_container" "frontend_development" {
     ignore_changes = all
   }
 }
+
+/* 
+resources section
+*/
