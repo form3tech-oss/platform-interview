@@ -1,5 +1,11 @@
-resource "vault_audit" "audit_dev" {
-  provider = vault.vault_dev
+data "rename" "form3" {
+  cwd_name = path.cwd
+  env_name = "${cwd_name == "dev" ? "development" : "production"}"
+  vault_name = "vault_${cmd_name}"
+}
+
+resource "vault_audit" "audit" {
+  provider = vault.alias
   type     = "file"
 
   options = {
@@ -7,14 +13,14 @@ resource "vault_audit" "audit_dev" {
   }
 }
 
-resource "vault_auth_backend" "userpass_dev" {
-  provider = vault.vault_dev
+resource "vault_auth_backend" "userpass" {
+  provider = vault.alias
   type     = "userpass"
 }
 
-resource "vault_generic_secret" "account_development" {
-  provider = vault.vault_dev
-  path     = "secret/development/account"
+resource "vault_generic_secret" "account" {
+  provider = vault.alias
+  path     = "secret/${data.rename.form3.env_name}/account"
 
   data_json = <<EOT
 {
@@ -24,36 +30,36 @@ resource "vault_generic_secret" "account_development" {
 EOT
 }
 
-resource "vault_policy" "account_development" {
-  provider = vault.vault_dev
-  name     = "account-development"
+resource "vault_policy" "account" {
+  provider = vault.alias
+  name     = "account-${data.rename.form3.env_name}"
 
   policy = <<EOT
 
-path "secret/data/development/account" {
+path "secret/data/${data.rename.form3.env_name}/account" {
     capabilities = ["list", "read"]
 }
 
 EOT
 }
 
-resource "vault_generic_endpoint" "account_development" {
-  provider             = vault.vault_dev
-  depends_on           = [vault_auth_backend.userpass_dev]
-  path                 = "auth/userpass/users/account-development"
+resource "vault_generic_endpoint" "account" {
+  provider             = vault.alias
+  depends_on           = [vault_auth_backend.userpass]
+  path                 = "auth/userpass/users/account-${data.rename.form3.env_name}"
   ignore_absent_fields = true
 
   data_json = <<EOT
 {
-  "policies": ["account-development"],
-  "password": "123-account-development"
+  "policies": ["account-${data.rename.form3.env_name}"],
+  "password": "123-account-${data.rename.form3.env_name}"
 }
 EOT
 }
 
-resource "vault_generic_secret" "gateway_development" {
-  provider = vault.vault_dev
-  path     = "secret/development/gateway"
+resource "vault_generic_secret" "gateway" {
+  provider = vault.alias
+  path     = "secret/${data.rename.form3.env_name}/gateway"
 
   data_json = <<EOT
 {
@@ -63,35 +69,35 @@ resource "vault_generic_secret" "gateway_development" {
 EOT
 }
 
-resource "vault_policy" "gateway_development" {
-  provider = vault.vault_dev
-  name     = "gateway-development"
+resource "vault_policy" "gateway" {
+  provider = vault.alias
+  name     = "gateway-${data.rename.form3.env_name}"
 
   policy = <<EOT
 
-path "secret/data/development/gateway" {
+path "secret/data/${data.rename.form3.env_name}/gateway" {
     capabilities = ["list", "read"]
 }
 
 EOT
 }
 
-resource "vault_generic_endpoint" "gateway_development" {
-  provider             = vault.vault_dev
-  depends_on           = [vault_auth_backend.userpass_dev]
-  path                 = "auth/userpass/users/gateway-development"
+resource "vault_generic_endpoint" "gateway" {
+  provider             = vault.alias
+  depends_on           = [vault_auth_backend.userpass]
+  path                 = "auth/userpass/users/gateway-${data.rename.form3.env_name}"
   ignore_absent_fields = true
 
   data_json = <<EOT
 {
-  "policies": ["gateway-development"],
-  "password": "123-gateway-development"
+  "policies": ["gateway-${data.rename.form3.env_name}"],
+  "password": "123-gateway-${data.rename.form3.env_name}"
 }
 EOT
 }
-resource "vault_generic_secret" "payment_development" {
-  provider = vault.vault_dev
-  path     = "secret/development/payment"
+resource "vault_generic_secret" "payment" {
+  provider = vault.alias
+  path     = "secret/${data.rename.form3.env_name}/payment"
 
   data_json = <<EOT
 {
@@ -101,46 +107,46 @@ resource "vault_generic_secret" "payment_development" {
 EOT
 }
 
-resource "vault_policy" "payment_development" {
-  provider = vault.vault_dev
-  name     = "payment-development"
+resource "vault_policy" "payment" {
+  provider = vault.alias
+  name     = "payment-${data.rename.form3.env_name}"
 
   policy = <<EOT
 
-path "secret/data/development/payment" {
+path "secret/data/${data.rename.form3.env_name}/payment" {
     capabilities = ["list", "read"]
 }
 
 EOT
 }
 
-resource "vault_generic_endpoint" "payment_development" {
-  provider             = vault.vault_dev
-  depends_on           = [vault_auth_backend.userpass_dev]
-  path                 = "auth/userpass/users/payment-development"
+resource "vault_generic_endpoint" "payment" {
+  provider             = vault.alias
+  depends_on           = [vault_auth_backend.userpass]
+  path                 = "auth/userpass/users/payment-${data.rename.form3.env_name}"
   ignore_absent_fields = true
 
   data_json = <<EOT
 {
-  "policies": ["payment-development"],
-  "password": "123-payment-development"
+  "policies": ["payment-${data.rename.form3.env_name}"],
+  "password": "123-payment-${data.rename.form3.env_name}"
 }
 EOT
 }
 
-resource "docker_container" "account_development" {
+resource "docker_container" "account" {
   image = "form3tech-oss/platformtest-account"
-  name  = "account_development"
+  name  = "account_${data.rename.form3.env_name}"
 
   env = [
-    "VAULT_ADDR=http://vault-development:8200",
-    "VAULT_USERNAME=account-development",
-    "VAULT_PASSWORD=123-account-development",
-    "ENVIRONMENT=development"
+    "VAULT_ADDR=http://vault-${data.rename.form3.env_name}:8200",
+    "VAULT_USERNAME=account-${data.rename.form3.env_name}",
+    "VAULT_PASSWORD=123-account-${data.rename.form3.env_name}",
+    "ENVIRONMENT=${data.rename.form3.env_name}"
   ]
 
   networks_advanced {
-    name = "vagrant_development"
+    name = "vagrant_${data.rename.form3.env_name}"
   }
 
   lifecycle {
@@ -148,19 +154,19 @@ resource "docker_container" "account_development" {
   }
 }
 
-resource "docker_container" "gateway_development" {
+resource "docker_container" "gateway" {
   image = "form3tech-oss/platformtest-gateway"
-  name  = "gateway_development"
+  name  = "gateway_${data.rename.form3.env_name}"
 
   env = [
-    "VAULT_ADDR=http://vault-development:8200",
-    "VAULT_USERNAME=gateway-development",
-    "VAULT_PASSWORD=123-gateway-development",
-    "ENVIRONMENT=development"
+    "VAULT_ADDR=http://vault-${data.rename.form3.env_name}:8200",
+    "VAULT_USERNAME=gateway-${data.rename.form3.env_name}",
+    "VAULT_PASSWORD=123-gateway-${data.rename.form3.env_name}",
+    "ENVIRONMENT=${data.rename.form3.env_name}"
   ]
 
   networks_advanced {
-    name = "vagrant_development"
+    name = "vagrant_${data.rename.form3.env_name}"
   }
 
   lifecycle {
@@ -168,19 +174,19 @@ resource "docker_container" "gateway_development" {
   }
 }
 
-resource "docker_container" "payment_development" {
+resource "docker_container" "payment" {
   image = "form3tech-oss/platformtest-payment"
-  name  = "payment_development"
+  name  = "payment_${data.rename.form3.env_name}"
 
   env = [
-    "VAULT_ADDR=http://vault-development:8200",
-    "VAULT_USERNAME=payment-development",
-    "VAULT_PASSWORD=123-payment-development",
-    "ENVIRONMENT=development"
+    "VAULT_ADDR=http://vault-${data.rename.form3.env_name}:8200",
+    "VAULT_USERNAME=payment-${data.rename.form3.env_name}",
+    "VAULT_PASSWORD=123-payment-${data.rename.form3.env_name}",
+    "ENVIRONMENT=${data.rename.form3.env_name}"
   ]
 
   networks_advanced {
-    name = "vagrant_development"
+    name = "vagrant_${data.rename.form3.env_name}"
   }
 
   lifecycle {
@@ -188,9 +194,9 @@ resource "docker_container" "payment_development" {
   }
 }
 
-resource "docker_container" "frontend_development" {
+resource "docker_container" "frontend" {
   image = "docker.io/nginx:latest"
-  name  = "frontend_development"
+  name  = "frontend_${data.rename.form3.env_name}"
 
   ports {
     internal = 80
@@ -198,7 +204,7 @@ resource "docker_container" "frontend_development" {
   }
 
   networks_advanced {
-    name = "vagrant_development"
+    name = "vagrant_${data.rename.form3.env_name}"
   }
 
   lifecycle {
