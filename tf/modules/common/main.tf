@@ -81,6 +81,7 @@ resource "vault_generic_endpoint" "gateway" {
 }
 EOT
 }
+
 resource "vault_generic_secret" "payment" {
   path     = "secret/${var.env_name}/payment"
 
@@ -112,7 +113,7 @@ resource "vault_generic_endpoint" "payment" {
   data_json = <<EOT
 {
   "policies": ["payment-${var.env_name}"],
-  "password": "${var.payment_db_password}"
+  "password": "${var.payment_password}"
 }
 EOT
 }
