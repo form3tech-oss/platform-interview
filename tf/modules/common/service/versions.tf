@@ -9,9 +9,5 @@ terraform {
     vault = {
       version = "3.0.1"
     }
-    git = {
-      source  = "innovationnorway/git"
-      version = ">= 0.1.3"
-    }
   }
 }

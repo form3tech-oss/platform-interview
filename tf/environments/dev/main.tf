@@ -1,5 +1,5 @@
 module "common" {
-  source = "../common"
+  source = "../../modules/common"
   env_name = "development"
   account_db_password = "965d3c27-9e20-4d41-91c9-61e6631870e7"
   account_password = "123-account-development"

@@ -1,7 +1,7 @@
 module "dev" {
-  source = "./modules/dev"
+  source = "./environments/dev"
 }
 
 module "prod" {
-  source = "./modules/prod"
+  source = "./environments/prod"
 }
