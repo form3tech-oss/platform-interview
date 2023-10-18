@@ -39,7 +39,8 @@ EOT
 resource "docker_container" "service" {
   name  = "${var.service_name}_${var.env_name}"
   image = "form3tech-oss/platformtest-${var.service_name}"
-  logs = true
+//  logs = true
+//  attach = true
 
   env = [
     "VAULT_ADDR=http://vault-${var.env_name}:8200",

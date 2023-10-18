@@ -4,14 +4,15 @@ terraform {
   required_providers {
     docker = {
       source = "kreuzwerker/docker"
-      version = "2.15.0"
+      version = "2.25.0"
     }
     vault = {
       version = "3.0.1"
     }
-    git = {
-      source  = "innovationnorway/git"
-      version = ">= 0.1.3"
-    }
+#may use this in the future to pickup environment by the git branch
+//    git = {
+//      source  = "innovationnorway/git"
+//      version = ">= 0.1.3"
+//    }
   }
 }
