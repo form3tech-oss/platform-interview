@@ -11,7 +11,7 @@ variable "nginx_port" {
 }
 
 #Service inputs
-variable "service_inputs" {
+variable "services_inputs" {
   type = list(object({
     service_name        = string
     service_db_password = string

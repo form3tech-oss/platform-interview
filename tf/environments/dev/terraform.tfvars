@@ -1,11 +1,15 @@
-env_name            = "staging"
-nginx_port          = 4080
-nginx_version       = "latest"
-vault_address       = "http://localhost:8201"
-vault_token         = "f23612cf-824d-4206-9e94-e31a6dc8ee8d"
+#Environments inputs
+environment_inputs = {
+    env_name = "development"
+    nginx_port = 4080
+    nginx_version = "latest"
+    vault_address = "http://localhost:8201"
+    vault_token = "f23612cf-824d-4206-9e94-e31a6dc8ee8d"
+}
+
 
 #Services inputs
-service_inputs = [
+services_inputs = [
   #account app
   {
     service_name        = "account"
