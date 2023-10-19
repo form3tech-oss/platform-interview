@@ -9,10 +9,5 @@ terraform {
     vault = {
       version = "3.0.1"
     }
-#may use this in the future to pickup environment by the git branch
-//    git = {
-//      source  = "innovationnorway/git"
-//      version = ">= 0.1.3"
-//    }
   }
 }

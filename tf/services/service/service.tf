@@ -1,5 +1,4 @@
 resource "vault_generic_secret" "service" {
-//  name     = "${var.service_name}-${var.env_name}"
   path     = "secret/${var.env_name}/${var.service_name}"
 
   data_json = <<EOT
@@ -23,7 +22,6 @@ EOT
 }
 
 resource "vault_generic_endpoint" "service" {
-//  name     = "${var.service_name}-${var.env_name}"
   depends_on           = [var.vault_auth_backend_userpass]
   path                 = "auth/userpass/users/${var.service_name}-${var.env_name}"
   ignore_absent_fields = true
