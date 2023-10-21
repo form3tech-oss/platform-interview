@@ -63,7 +63,7 @@ services_inputs_prod = [
 ]
 
 
-#Stage environments inputs
+#Stage environment inputs
 environment_inputs_stage = {
     env_name = "staging"
     nginx_port = 4082
