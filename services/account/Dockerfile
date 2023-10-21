@@ -5,7 +5,7 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /go/bin/account
 
-FROM scratch
+FROM busybox
 COPY --from=builder /go/bin/account /go/bin/account
 
 ENTRYPOINT ["/go/bin/account"]
