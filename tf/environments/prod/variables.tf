@@ -1,12 +1,12 @@
 #Service inputs
 variable "environment_inputs" {
-  type = list(object({
+  type = object({
     env_name = string
     nginx_port = number
     nginx_version = string
     vault_address = string
     vault_token = string
-  }))
+  })
 }
 
 #Service inputs
