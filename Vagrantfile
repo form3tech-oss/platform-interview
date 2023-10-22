@@ -21,10 +21,17 @@ Vagrant.configure("2") do |config|
     config.vm.box = "hashicorp/bionic64"
     #Possible other vagrant/ubuntu images to test with VMware Fusion on Mac
     #config.vm.box = "generic/ubuntu1804"
-    #config.vm.box = "bento/ubuntu-18.04"
   end
 
-#Configure Mem/CPU for the VM
+  #Configure Mem/CPU for the multipass VM
+#   config.vm.provider "multipass" do |multipass, override|
+#     multipass.hd_size = "10G"
+#     multipass.cpu_count = 1
+#     multipass.memory_mb = 2048
+#     multipass.image_name = "bionic"
+#   end
+
+#Configure Mem/CPU for the VMWare VM
   config.vm.provider "vmware_desktop" do |vmware|
     vmware.linked_clone = true
     vmware.gui = false
