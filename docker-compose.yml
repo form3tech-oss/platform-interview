@@ -3,6 +3,7 @@ version: '3'
 networks:
   development:
   production:
+  staging:
 services:
   vault-development:
     networks:
@@ -24,3 +25,14 @@ services:
       - "8301:8200"
     environment:
       - VAULT_DEV_ROOT_TOKEN_ID=083672fc-4471-4ec4-9b59-a285e463a973
+  vault-staging:
+    networks:
+      - staging
+    image: vault:1.8.3
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8401:8200"
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=f23612cf-824d-4206-9e94-e31a6dc8ee8e
+

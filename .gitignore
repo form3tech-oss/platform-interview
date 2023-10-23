@@ -1,6 +1,7 @@
 # Ignore everything in this directory
 .idea
 .vagrant
+vagrant-ssh.txt
 .terraform.loc*
 terraform.tfstat*
 .terraform/

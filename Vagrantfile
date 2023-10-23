@@ -16,14 +16,27 @@ Vagrant.configure("2") do |config|
   if arch == 'arm64' || (arch == 'i386' && running_rosetta()) # is M1
     config.vm.box = "multipass"
   else # not M1
-    config.vm.box = "ubuntu/bionic64"
+    #config.vm.box = "ubuntu/bionic64"
+    #using vagrant image which works with VMware Fusion on Macbook Pro 2015
+    config.vm.box = "hashicorp/bionic64"
+    #Possible other vagrant/ubuntu images to test with VMware Fusion on Mac
+    #config.vm.box = "generic/ubuntu1804"
   end
 
-  config.vm.provider "multipass" do |multipass, override|
-    multipass.hd_size = "10G"
-    multipass.cpu_count = 1
-    multipass.memory_mb = 2048
-    multipass.image_name = "bionic"
+  #Configure Mem/CPU for the multipass VM
+#   config.vm.provider "multipass" do |multipass, override|
+#     multipass.hd_size = "10G"
+#     multipass.cpu_count = 1
+#     multipass.memory_mb = 2048
+#     multipass.image_name = "bionic"
+#   end
+
+#Configure Mem/CPU for the VMWare VM
+  config.vm.provider "vmware_desktop" do |vmware|
+    vmware.linked_clone = true
+    vmware.gui = false
+    vmware.vmx["memsize"] = "2048"
+    vmware.vmx["numvcpus"] = "2"
   end
 
   config.vm.provision "file", source: "./form3.crt", destination: "/tmp/form3.crt"
