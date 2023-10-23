@@ -12,6 +12,7 @@ variable "environment_inputs_dev" {
 #Service inputs
 variable "services_inputs_dev" {
   type = list(object({
+    service_image       = string
     service_name        = string
     service_db_password = string
     service_password    = string
@@ -33,6 +34,7 @@ variable "environment_inputs_prod" {
 #Prod service inputs
 variable "services_inputs_prod" {
   type = list(object({
+    service_image       = string
     service_name        = string
     service_db_password = string
     service_password    = string
@@ -54,6 +56,7 @@ variable "environment_inputs_stage" {
 #Stage service inputs
 variable "services_inputs_stage" {
   type = list(object({
+    service_image       = string
     service_name        = string
     service_db_password = string
     service_password    = string

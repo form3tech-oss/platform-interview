@@ -36,7 +36,7 @@ EOT
 
 resource "docker_container" "service" {
   name  = "${var.service_name}_${var.env_name}"
-  image = "form3tech-oss/platformtest-${var.service_name}"
+  image = var.service_image
 //  logs = true
 //  attach = true
 
