@@ -310,6 +310,8 @@ resource "docker_container" "account_production" {
   lifecycle {
     ignore_changes = all
   }
+
+  depends_on = [vault_generic_endpoint.account_production]
 }
 
 resource "docker_container" "gateway_production" {
@@ -330,6 +332,8 @@ resource "docker_container" "gateway_production" {
   lifecycle {
     ignore_changes = all
   }
+
+  depends_on = [vault_generic_endpoint.gateway_production]
 }
 
 resource "docker_container" "payment_production" {
@@ -350,6 +354,8 @@ resource "docker_container" "payment_production" {
   lifecycle {
     ignore_changes = all
   }
+
+  depends_on = [vault_generic_endpoint.payment_production]
 }
 
 resource "docker_container" "frontend_production" {
@@ -368,6 +374,7 @@ resource "docker_container" "frontend_production" {
   lifecycle {
     ignore_changes = all
   }
+
 }
 
 resource "docker_container" "account_development" {
@@ -388,6 +395,8 @@ resource "docker_container" "account_development" {
   lifecycle {
     ignore_changes = all
   }
+
+  depends_on = [vault_generic_endpoint.account_development]
 }
 
 resource "docker_container" "gateway_development" {
@@ -408,6 +417,8 @@ resource "docker_container" "gateway_development" {
   lifecycle {
     ignore_changes = all
   }
+
+  depends_on = [vault_generic_endpoint.gateway_development]
 }
 
 resource "docker_container" "payment_development" {
@@ -428,6 +439,8 @@ resource "docker_container" "payment_development" {
   lifecycle {
     ignore_changes = all
   }
+
+  depends_on = [vault_generic_endpoint.payment_development]
 }
 
 resource "docker_container" "frontend_development" {

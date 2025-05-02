@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
     multipass.hd_size = "10G"
     multipass.cpu_count = 1
     multipass.memory_mb = 2048
-    multipass.image_name = "bionic"
+    multipass.image_name = "22.04"
   end
 
   config.vm.provision "file", source: "./form3.crt", destination: "/tmp/form3.crt"
@@ -41,6 +41,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "f3-interview"
   config.vm.hostname = "f3-interview"
   config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
+  config.vm.boot_timeout = 300
 
   config.vm.provision :shell,
     keep_color: true,
