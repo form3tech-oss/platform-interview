@@ -7,7 +7,7 @@ services:
   vault-development:
     networks:
       - development
-    image: vault:1.8.3
+    image: hashicorp/vault:1.19
     cap_add:
       - IPC_LOCK
     ports:
@@ -17,7 +17,7 @@ services:
   vault-production:
     networks:
       - production
-    image: vault:1.8.3
+    image: hashicorp/vault:1.19
     cap_add:
       - IPC_LOCK
     ports:
