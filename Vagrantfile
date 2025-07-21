@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   if arch == 'arm64' || (arch == 'i386' && running_rosetta()) # is M1
     config.vm.box = "multipass"
   else # not M1
-    config.vm.box = "ubuntu/jammy64" # Upgraded from bionic64
+    config.vm.box = "ubuntu/jammy64"
   end
 
   config.vm.provider "multipass" do |multipass, override|
