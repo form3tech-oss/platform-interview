@@ -1,13 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
 Vagrant.configure("2") do |config|
 
-  # Tells us if the host system is an Apple Silicon Mac running Rosetta
   def running_rosetta()
     !`sysctl -in sysctl.proc_translated`.strip().to_i.zero?
   end
@@ -16,7 +11,7 @@ Vagrant.configure("2") do |config|
   if arch == 'arm64' || (arch == 'i386' && running_rosetta()) # is M1
     config.vm.box = "multipass"
   else # not M1
-    config.vm.box = "ubuntu/bionic64"
+    config.vm.box = "ubuntu/jammy64" # Upgraded from bionic64
   end
 
   config.vm.provider "multipass" do |multipass, override|
