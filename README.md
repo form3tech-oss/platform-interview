@@ -4,7 +4,7 @@ Platform engineers at Form3 build highly available distributed systems using inf
 
 
 ## 🧪 Sample application
-The sample application consists of four services:
+The sample application consists of three backend service containers and a frontend container:
 
 ```
 ┌─────────────┐     ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
@@ -22,7 +22,7 @@ The sample application consists of four services:
                     └──────────────┘
 ```                    
 
-Three of those services connect to [vault](https://www.vaultproject.io/) to retrieve database credentials. The frontend container serves a static file.
+The backend services connect to [vault](https://www.vaultproject.io/) to retrieve database credentials. The frontend container serves a static file.
 
 The project structure is as follows:
 
@@ -90,12 +90,12 @@ a7c0b089b10c   vault:1.8.3                          "docker-entrypoint.s…"   2
 ```
 
 ## ⚙️ Task
-Imagine the following scenario, your company is growing quickly 🚀 and increasing the number services being deployed and configured.
+Imagine the following scenario, your company is growing quickly 🚀 and increasing the number of backend services being deployed and configured.
 It's been noticed that the code in `tf/main.tf` is not very easy to maintain 😢.
 
 We would like you to complete the following tasks:
 
-- [ ] Improve the Terraform code to make it easier to add/update/remove services
+- [ ] Improve the Terraform code to make it easier to add/update/remove backend services
 - [ ] Add a new environment called `staging` that runs each microservice
 - [ ] Add a README detailing: 
   - [ ] Your design decisions, if you are new to Terraform let us know
@@ -116,7 +116,7 @@ We would like you to complete the following tasks:
 - Use only plain Terraform in your solution, i.e. anything supported by the Terraform CLI installed by the `run.sh` script, but not external tooling or libraries that wrap or extend Terraform, such as Terragrunt or tfenv
 - Only modify files in the `tf/` directory, `run.sh`, and `docker-compose.yml`
 - Keep the current versions of the services running in `development` and `production` environments
-- Structure your code in a way that will segregate environments
+- Structure your code in a way that will segregate environments, so a `terraform apply` for one environment can't affect another
 - 🚨 All environments (including staging) should be created when you run `vagrant up` and the apps should print `service started` and the secret data in their logs 🚨
 - Structure your code in a way that allows engineers to run different versions of services in different environments
 
